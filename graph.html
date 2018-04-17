@@ -1,0 +1,283 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="jquery-ui.css">  
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+
+
+	<h1 id="B"></h1>
+
+<!-- <header id="header">
+  <div class="inner">
+    <nav id="menubar">
+    <ul id="menu">
+        <li class="dropdown"><a href="#">Company</a></li>
+        <li class="selected dropdown"><a href="#">Products</a></li>
+        <li class="dropdown"><a href="#">News</a></li>
+        <li class="dropdown"><a href="#">Downloads</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    </nav>
+  </div>
+</header> -->
+<textarea rows="4" cols="50" id="commentArea">
+
+</textarea>
+<div id="smiles">
+    <form action="">
+        <input type="radio" name="gender" value="1"> Excelent<br>
+        <input type="radio" name="gender" value="0"> Good<br>
+        <input type="radio" name="gender" value="-1"> Bad
+    </form>
+  </div>
+<div style="width:75%;">
+        <canvas id="canvas"></canvas>
+    </div>
+    <br>
+    <br>
+    <button id="addData" onclick="sendProgress()">Add Data</button>
+<p>Date: <input type="text" id="datepicker"></p>
+ 
+
+<script src="basicFunction.js"></script>
+<script src="jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAR7L3KrsOWXYqu0HMcM85EOBPKWSOF9t0",
+    authDomain: "testapp-5cce5.firebaseapp.com",
+    databaseURL: "https://testapp-5cce5.firebaseio.com",
+    projectId: "testapp-5cce5",
+    storageBucket: "",
+    messagingSenderId: "984038814608"
+  };
+  firebase.initializeApp(config);
+
+        // window.onload = function() {
+        //     var ctx = document.getElementById("canvas").getContext("2d");
+        //     window.myLine = new Chart(ctx, myGraph);
+        // };
+$( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+
+function getCalendarDate(date)
+{
+    if (date.length != 0) {
+      var res = date.split("/");
+      var month = res[0];
+      var day = res[1];
+      var year = res[2];
+      return day + "-" + month + "-" + year
+    };
+}
+
+
+function sendProgress()
+  {            
+      var user = firebase.auth().currentUser;
+      if (user != null) 
+      {
+          firebase.database().ref('/Users/'+ user.uid + '/LastAdded/').once('value').then(function(snapshot) {
+
+          var old_Y = 0;          
+          if (snapshot.val() != null)
+          {
+            old_Y = snapshot.val().Y;
+          }
+
+          // var old_Y = snapshot.val().Y;
+          console.log(old_Y);
+          var choosedValue = parseInt($('input[name="gender"]:checked').val());
+          var new_Y = choosedValue + parseInt(old_Y);
+          var newProgress = getCalendarDate(document.getElementById("datepicker").value);
+          var userComment = document.getElementById('commentArea').value; 
+          var updates = {};
+          var postData = {
+                    Y : new_Y,
+                    sendValue : choosedValue,
+                    comment : userComment
+                  };
+          updates['/Users/' + user.uid + '/' + newProgress] = postData;
+          updates['Users/' + user.uid + '/LastAdded'] = postData;
+
+          if (newProgress.length !=0) {
+            
+            firebase.database().ref().update(updates);
+
+            // var isDayInGraph = $.inArray(newProgress, myGraph.data.labels);
+            // if (isDayInGraph == -1) 
+            // {
+              
+                // console.log($.inArray(newProgress, myGraph.data.labels));
+                
+                // myGraph.data.labels.push(newProgress);  
+                
+                // myGraph.data.datasets.forEach((dataset) => {
+                //     dataset.data.push(new_Y);
+                // });
+                
+                // window.myLine.update();
+            // }
+            // else
+            // {
+                // myGraph.data.datasets[0].data[isDayInGraph] = new_Y;
+                // window.myLine.update();
+            // }
+            
+              
+            };
+
+        
+        });
+      };
+      
+      
+      
+  }
+
+//   firebase.database().ref('/Progress/Petr').once('value', function(snapshot) {
+//   snapshot.forEach(function(childSnapshot) {
+//     if (childSnapshot.key != 'LastAdded') {
+//           var childData = childSnapshot.val().Y;
+//           myGraph.data.labels.push(childSnapshot.key);
+//           myGraph.data.datasets.forEach((dataset) => {
+//           dataset.data.push(childData);
+//           });
+          
+//     };
+//     window.myLine.update();
+//     // ...
+//   });
+  
+// });
+
+
+function tryToDisplayTimeline(){
+    // add date and value
+    if (myGraph.data.labels.length == 0) {
+        n =  new Date();
+            y = n.getFullYear();
+            m = n.getMonth() + 1;
+            d = n.getDate();
+            var now = d + "." + m + "." + y;
+            myGraph.data.labels.push(now);
+            myGraph.data.datasets.forEach((dataset) => {
+                dataset.data.push(2);
+
+          });
+            window.myLine.update(); 
+    }
+    else
+    {
+      var lastDate = myGraph.data.labels[myGraph.data.labels.length - 1];   
+          var res = lastDate.split(".");
+          var newDay = parseInt(res[0]) + 1;
+          var newDate = newDay + "." + res[1] + "." + res[2];
+          console.log(myGraph.data.datasets[1].label);
+          var petersLine = myGraph.data.datasets[0];
+          var jirkasLine = myGraph.data.datasets[1];
+          myGraph.data.labels.push(newDate);
+
+              var new_X = parseInt($('input[name="gender"]:checked').val()) + 
+              parseInt(petersLine.data[petersLine.data.length - 1]);
+              if (myGraph.data.labels.length > 5) {
+              myGraph.data.labels.shift();
+              petersLine.data.shift();
+              // jirkasLine.data.shift();
+              };
+              petersLine.data.push(new_X);
+              // jirkasLine.data.push(0);         
+              window.myLine.update(); 
+          
+
+              
+          
+    }
+          
+          
+        
+
+}
+
+
+</script>
+<script>
+        // var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        // var myGraph = {
+        //     type: 'line',
+        //     data: {
+        //         labels: [],
+        //         datasets: [{
+        //             label: "Petr",
+        //             backgroundColor: 'red',
+        //             borderColor: 'red',
+        //             data: [
+        //             ],
+        //             fill: false
+                
+        //         }, 
+        //         // {
+        //         //     label: "Jirka",
+        //         //     backgroundColor: 'blue',
+        //         //     borderColor: 'blue',
+        //         //     data: [2,1,2
+        //         //     ],
+        //         //     fill: false
+                
+        //         // }
+        //         ]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         title:{
+        //             display:true,
+        //             text:'Chart.js Line Chart'
+        //         },
+        //         tooltips: {
+        //             mode: 'index',
+        //             intersect: false,
+        //         },
+        //         hover: {
+        //             mode: 'nearest',
+        //             intersect: true
+        //         },
+        //         scales: {
+        //             xAxes: [{
+        //                 display: true,
+        //                 scaleLabel: {
+        //                     display: true,
+        //                     labelString: 'Month'
+        //                 }
+        //             }],
+        //             yAxes: [{
+        //                 display: true,
+        //                 scaleLabel: {
+        //                     display: true,
+        //                     labelString: 'Value'
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // };
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

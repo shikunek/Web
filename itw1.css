@@ -1,0 +1,389 @@
+
+#header {
+  min-height: 130px;
+  background-color: rgb(247,248,255);
+  width: 100%;
+  margin: 0;
+  float: left;
+  display: inline-block;
+}
+
+#header div.inner{  
+  background-color: rgb(247,248,255);
+  right:0;
+  max-width: 1200px;  
+  margin: auto;
+}
+
+#header div.inner h1 a{
+  background: url(images/logo.png);
+  height: 80px;
+  width: 400px;
+  background-repeat: no-repeat;
+  color: transparent;
+  margin-top: 20px;
+  float: left;
+}
+
+#menubar{
+  max-width: 800px;
+  float:left;
+  margin-top: 20px;
+}
+
+#header #menu li{
+  display: inline-block;
+  padding: 10px 25px 10px 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid white;
+  margin-right: 20px;
+  
+}
+
+#header #menu a{
+  color:rgb(175,176,179);
+  text-decoration: none;
+}
+
+body{
+  margin:0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12pt;
+  line-height: 1.2;
+  min-width: 650px;
+}
+
+#page{
+}
+
+#social{
+  position: fixed;
+  height: 30px;
+  z-index: 1;
+  width: 100%;
+  margin-left: 0px;
+  left: 0;
+  margin: 0;
+  background-color: rgb(102,102,102);
+  top:0px;
+}
+
+#topmenu{
+  height: 0px;
+}
+
+#topmenu hr{
+  display: none;
+}
+
+#topmenu a{
+  position: fixed;
+  right:20px;
+  text-transform: lowercase;
+  color:white;
+  z-index: 2;
+  background-color: rgb(102,102,102);
+  text-decoration: none;
+  top:5px;
+}
+
+#topmenu a.login{
+  background-image: url(images/loginlink.png);
+  background-position: right;
+  width: 45px;
+  background-repeat: no-repeat;
+}
+
+#topmenu a.hidden{
+  display: none;
+}
+
+
+div.icons a{
+  display: inline-block;
+  position: absolute;
+  font-size:0;
+  line-height: 2;
+  margin: 3px;
+  width: 25px;
+  height: 25px;
+  background-size: 23px 23px;
+}
+
+a.twitter{
+  background-image: url(images/i_twitter.png);  
+  background-repeat: no-repeat;
+  color:transparent;
+  position: absolute;
+  top: 0px;
+
+}
+
+a.fb{
+  background-image: url(images/i_fb.png); 
+  background-repeat: no-repeat;
+  color:transparent;
+  position: absolute;
+  top: 0px;
+  left:30px;
+}
+
+a.linkedin{
+  background-image: url(images/i_linkedin.png); 
+  background-repeat: no-repeat;
+  color:transparent;
+  position: absolute;
+  top: 0px;
+  left: 60px;
+}
+#header #menu li.dropdown{
+  background: rgb(247,248,255) no-repeat url(images/caretb.png);
+  background-position: right 10px center ;
+}
+
+#header #menu li:hover{
+  background-color: white;
+}
+
+#header #menu li.dropdown:hover{
+  background: white no-repeat url(images/caretb.png);
+  background-position: right 10px center ;
+}
+
+#header #menu li.selected{
+  background: rgb(66,179,229) no-repeat url(images/caretw.png);
+  background-position: right 10px center ;
+}
+
+#header #menu li.selected:hover{
+  background: rgb(66,179,229) no-repeat url(images/caretw.png);
+  background-position: right 10px center ;
+}
+
+
+
+#header #menu a:hover{
+  color:rgb(175,176,179);
+}
+
+#header #menu li.selected a{
+  color:white;
+}
+
+#main div.inner{
+  margin: auto;
+  max-width: 1200px;
+  margin-bottom: 30px;
+}
+
+#main h2{
+  font-size: 250%;
+  margin-top: 40px;
+  color:#2b506e;
+}
+
+#main h3{
+  font-size: 200%;
+  margin-bottom: 20px;
+  color:#2b506e;
+}
+
+
+#main header{
+  margin-bottom: 30px;
+  min-height: 150px;
+  display: inline-block;
+  width: 100%;
+  clear: both;
+}
+
+
+#main header p{
+  font-style: italic;
+}
+
+#main header:after{
+  content: '';
+  position: absolute;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+  height: 1px; 
+  background: rgb(229,229,229); 
+}
+
+#main section{
+  height: 40%;
+  margin: auto;
+  max-width: 1200px;
+  display: inline-block;
+}
+
+p.demo a{
+  background-color: rgb(250,167,50);
+  text-decoration: none;
+  color:white;
+  border-radius: 4px;
+  font-size: 14pt;
+  width: 60px;
+  text-align: center;
+  font-style: normal;
+  vertical-align: middle;
+  margin-left: 15px;
+  margin-right: 90px;
+  margin-top: -20px;
+  float: right;
+  padding: 10px;
+}
+
+p.docs a{
+  background-color: rgb(66,179,229);
+  border-radius: 4px;
+  text-decoration: none;
+  color:white;
+  font-style: normal;
+  font-size: 14pt;
+  float: right;
+  margin-left: 20px;
+  margin-top: -20px;
+  padding: 10px;
+}
+
+
+div.inner img{
+  float:right;
+  margin: 20px;
+}
+
+
+section.col h3 a{
+  font: 14px;
+  font-size: 15pt;
+  color:white;
+}
+
+#related{
+  margin-top: 0px;
+  position: relative;
+  color: white;
+  background-color: rgb(63,86,115);
+  height: 350px;
+}
+
+#related h4{
+  margin-bottom: 25px;
+}
+
+#related div.inner{
+  margin: 15px;
+  margin: auto;
+  max-width: 1200px;
+}
+
+#related strong{
+  color:rgb(65,163,210);
+  position: relative;
+  font-size: 10pt;
+  left:1%;
+}
+
+#related p{
+  margin-bottom:-20px;
+  position: relative;
+  top:-25px;
+  font-size: 11pt;
+  height: 70px;
+  overflow: hidden;
+
+}
+
+#related strong:after {
+  float: right;
+  margin-right: 10px;
+  top: -10px;
+  content: "...see more...";
+}
+
+section.col{
+  width: 30%;
+  float: left;
+
+}
+
+div.abox h3{
+  font-size: 15pt;
+}
+
+
+#references {
+  max-width: 30%;
+  float: left;
+  margin-left: 2%;
+  display: block;
+  font-size: 11pt;
+}
+
+#didyouknow{
+  top: 0%;
+  float: left;
+  margin-left: 2%;
+  display: block;
+  max-width: 30%;
+  font-size: 11pt;
+}
+
+a.d2{
+  color:white;
+  text-decoration: none;
+  display: block;
+  position: relative;
+}
+
+a.d2:after{
+   white-space:pre;
+}
+
+span.sgn{
+  color:rgb(65,163,210);
+  position: absolute;
+  top:110%;
+  left:5%;
+}
+
+#footer{
+  background-color: rgb(102,102,102);
+  position:relative;
+  overflow: hidden;
+  height: 40px;
+}
+
+#footer hr{
+  display: none;
+}
+
+#footer div.copy{
+  color:white;
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  font-size: 10pt;
+}
+
+#footer ul.menu{
+  position: absolute;
+  bottom:0px;
+  right:30px;
+  margin-bottom: 10px;
+}
+
+#footer ul.menu a{
+  color:white;
+}
+
+#footer ul.menu li{
+  display: inline-block;
+  font-size: 10pt;
+  margin-right: 15px;
+}
