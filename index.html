@@ -49,46 +49,18 @@
         
     </div>
 
-
-
-    <!-- <div id="usersTable">
-
-        <table id="myTable">
-
-            <tr>
-
-              <td>Row1 cell1</td>
-              <td>Row1 cell2</td>
-
-            </tr>
-
-        </table>  
-
     </div>
- -->
+
 </div>
 
-<!-- <div>
-  <div id="smiles">
-    <form action="">
-        <input type="radio" name="gender" value="1"> Excelent<br>
-        <input type="radio" name="gender" value="0"> Good<br>
-        <input type="radio" name="gender" value="-1"> Bad
-    </form>
-  </div>
-  
-  <div>
-    <button type="submit" id="send" onClick="sendProgress()">Send</button>
-  </div>
-  
-</div> -->
 
 <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
 
 
 <script src="basicFunction.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
 <script>
   // Initialize Firebase
   var config = {
@@ -101,10 +73,10 @@
   };
   firebase.initializeApp(config);
 
-  var B = document.getElementById('B');
-  var dbref = firebase.database().ref().child('text');
+  // var B = document.getElementById('B');
+  // var dbref = firebase.database().ref().child('text');
   
-  dbref.on('value', snap => B.innerText = snap.val());
+  // dbref.on('value', snap => B.innerText = snap.val());
 
     function signUp() {
 
@@ -219,25 +191,25 @@
 
   }
 
-  function sendProgress()
-  {
+  // function sendProgress()
+  // {
       
-      firebase.database().ref('/Progress/' + 'Petr').once('value').then(function(snapshot) {
-        var old_X = snapshot.val().X;
-        var new_X = parseInt($('input[name="gender"]:checked').val()) + parseInt(old_X);
-        var newProgress = firebase.database().ref().child('Progress').push().key;
-        var updates = {};
-        var postData = {
-                  X : new_X,
-                  Y : new_X
-                };
-        updates['/Progress/' + 'Petr'] = postData;
+  //     firebase.database().ref('/Progress/' + 'Petr').once('value').then(function(snapshot) {
+  //       var old_X = snapshot.val().X;
+  //       var new_X = parseInt($('input[name="gender"]:checked').val()) + parseInt(old_X);
+  //       var newProgress = firebase.database().ref().child('Progress').push().key;
+  //       var updates = {};
+  //       var postData = {
+  //                 X : new_X,
+  //                 Y : new_X
+  //               };
+  //       updates['/Progress/' + 'Petr'] = postData;
 
-        firebase.database().ref().update(updates);
-      });
+  //       firebase.database().ref().update(updates);
+  //     });
       
       
-  }
+  // }
 
 // var ctx = document.getElementById("myChart");
 
