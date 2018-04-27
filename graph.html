@@ -1,6 +1,6 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -28,14 +28,30 @@
 
 </section> -->
 
-<button id="addData" onclick="tryToDisplayTimeline()">Add Data</button>
-<canvas id="myChart" width="400" height="400"></canvas>
+<!-- <button id="addData" onclick="tryToDisplayTimeline()">Add Data</button> -->
+
+<!-- <canvas id="myChart" width="400" height="400"></canvas> -->
+<!-- <div class="chartWrapper" >
+        <div class="chartAreaWrapper" style=" float: left; width: 600px; overflow:scroll; ">
+            <canvas id="myChart" height="100" ></canvas>
+        </div>
+        <canvas id="myChartAxis" height="100" width="300"></canvas>
+    </div> -->
+    <!-- <canvas id="myImg" src="images/ui-icons_555555_256x240.png" alt="Trolltunga, Norway" width="300" height="200"> -->
+<!-- <div id="myModal" class="modal">
+  <span class="close">&times;</span>
+  <canvas class="modal-content" id="img01">
+  <div id="caption"></div>
+</div> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
 
+
+
 <script type="text/javascript">
+
 
     var actualUser = null;
     var numDays = 0;
@@ -43,6 +59,7 @@
     var numShownDays = 10;
     var firstDayOfWeek = 0;
     var firstDayShown = null; // Date
+    // var yValues = [];
 
   var config = {
     apiKey: "AIzaSyAR7L3KrsOWXYqu0HMcM85EOBPKWSOF9t0",
@@ -63,52 +80,14 @@
   // }
  // var ctx = document.getElementById("myChart").getContext('2d');
  //  window.myLine = new Chart(ctx, myGraph);  
-          var myGraph = {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [
-                ]
-            },
-            options: {
-                responsive: true,
-                title:{
-                    display:true,
-                    text:'Chart.js Line Chart'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Month'
-                        }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Value'
-                        }
-                    }]
-                }
-            }
-        };
 
 
-    window.onload = function() {
-      var ctx = document.getElementById('myChart').getContext('2d');
-      window.myLine = new Chart(ctx, myGraph);
-      window.myLine.update();
-    };
+
+    // window.onload = function() {
+    //   var ctx = document.getElementById('myChart').getContext('2d');
+    //   window.myLine = new Chart(ctx, myGraph);
+    //   // window.myLine.update();
+    // };
 
 
 
@@ -124,171 +103,305 @@
     }
   });
 
-
-
-  function tryToDisplayTimeline(){
-    // add date and value
-    // console.log(myGraph.data.datasets[0].label);
-    // if (myGraph.data.labels.length == 0) {
-        n =  new Date();
-            y = n.getFullYear();
-            m = n.getMonth() + 1;
-            d = n.getDate();
-            var now = d + "." + m + "." + y;
-            myGraph.data.labels.push(now);
-            myGraph.data.datasets.forEach((dataset) => {
-                dataset.data.push(2);
-
-          });
-            window.myLine.update(); 
-    // }
-    // else
-    // {
-    //   var lastDate = myGraph.data.labels[myGraph.data.labels.length - 1];   
-    //       var res = lastDate.split(".");
-    //       var newDay = parseInt(res[0]) + 1;
-    //       var newDate = newDay + "." + res[1] + "." + res[2];
-    //       console.log(myGraph.data.datasets[1].label);
-    //       var petersLine = myGraph.data.datasets[0];
-    //       var jirkasLine = myGraph.data.datasets[1];
-    //       myGraph.data.labels.push(newDate);
-
-    //           // var new_X = parseInt($('input[name="gender"]:checked').val()) + 
-    //           // parseInt(petersLine.data[petersLine.data.length - 1]);
-    //           if (myGraph.data.labels.length > 5) {
-    //           myGraph.data.labels.shift();
-    //           petersLine.data.shift();
-    //           // jirkasLine.data.shift();
-    //           };
-    //           petersLine.data.push(5);
-    //           // jirkasLine.data.push(0);         
-    //           window.myLine.update(); 
-                  
-    // }
-  }
-
-  function setDatasetColor(dataset, usersNumber)
+function showGraph(user)
   {
-      switch (usersNumber)
-        {
-            case 0: // Base_Red: #e57373, Miss_Red: #ffcdd2
-                    dataset.backgroundColor = "rgb(229, 115, 115)"; 
-                    // lineDataSet.setColor(Color.argb(255, 229, 115, 115));
-                    // lineDataSet.setCircleColor(Color.argb(255, 229, 115, 115));
-                break;
-            case 1: // Base_Light-Blue: #4fc3f7, Miss_Light-Blue: #b3e5fc
-                    dataset.backgroundColor = "rgb(79, 195, 247)"; 
-                    // lineDataSet.setColor(Color.argb(255, 79, 195, 247));
-                    // lineDataSet.setCircleColor(Color.argb(255, 79, 195, 247));
-                break;
-            case 2: // Base_Green: #81c784, Miss_Green: #c8e6c9
-                    dataset.backgroundColor = "rgb(129, 199, 1325)"; 
-                    // lineDataSet.setColor(Color.argb(255, 129, 199, 132));
-                    // lineDataSet.setCircleColor(Color.argb(255, 129, 199, 132));
-                break;
-            case 3: // Base_Purple: #ba68c8, Miss_Purple: #e1bee7
-                    dataset.backgroundColor = "rgb(186, 104, 200)"; 
-                    // lineDataSet.setColor(Color.argb(255, 186, 104, 200));
-                    // lineDataSet.setCircleColor(Color.argb(255, 186, 104, 200));
-                break;
-            default:
-                    dataset.backgroundColor = "rgb(229, 115, 115)"; 
-                    // lineDataSet.setColor(Color.BLUE);
-                    // lineDataSet.setCircleColor(Color.BLUE);
-                break;
-        }
-        return dataset.backgroundColor;
-  }
+        
+
+      var userGraphsRef = firebase.database().ref('Uzivatel/' + user.uid + '/Projects');
+      
+      userGraphsRef.on('value', function(projects) 
+      {                    
+          projects.forEach(function(project)
+          {
+              var projectGraphRef = firebase.database().ref('Projects/' + project.key);  
+              
+              // console.log(project.val());
+              // SEM DAT PRIDAVANI ELEMENTU S GRAFEM    
+              
+
+
+
+              var myGraph = {
+                  type: 'line',
+                  data: {
+                      labels: [],
+                      datasets: [
+                      ]
+                  },
+                  width: 300,
+                  height: 300,
+                  options: {
+                      responsive: false,
+                      legend: {
+                          display: true,
+                          
+                      },
+                      title:{
+                          display:true,
+                          text: project.val().projectName
+                      },
+                      tooltips: {
+                          mode: 'index',
+                          intersect: false,
+                      },
+                      hover: {
+                          mode: 'nearest',
+                          intersect: true
+                      },
+                      scales: {
+                          xAxes: [{
+                              display: true,
+                              scaleLabel: {
+                                  display: true,
+                                  labelString: 'Month'
+                              }
+                          }],
+                          yAxes: [{
+                              display: true,
+                              scaleLabel: {
+                                  display: true,
+                                  labelString: 'Value'
+                              }
+                          }]
+                      },
+                      animation:{
+
+                          onComplete: function(animation) {
+                          
+                      }
+                    }
+                  
+                    }
+                  };
+             
   
 
-  function someGraphSetting(usersNumber, usersProjectValues)
+              // Get the image and insert it inside the modal - use its "alt" text as a caption
+              // var img = document.getElementById('myImg');
+               // var div = document.createElement("div");
+              var canv = document.createElement('canvas');
+              canv.id = project.key;
+              canv.width = 500;
+              canv.height = 400;
+              
+              var graf = new Chart(canv, myGraph);
+              var chartArea = document.createElement("div");
+              chartArea.className = 'chartArea';
+              chartArea.appendChild(canv);
+              var isBig = false;
+              // chartArea.width = 400;
+              // float: left; width: 600px; overflow:scroll;
+              chartArea.setAttribute("style", "width:600px; height: 450px;float:left; overflow-x: scroll");
+              // var captionText = document.getElementById("caption");
+              chartArea.onclick = function(){
+                  // graf = new Chart(canv, myGraph);
+                  // modal.style.display = "block";
+                  document.getElementById(project.key).remove();
+                  var canv = document.createElement('canvas');
+                  canv.id = project.key;
+                
+                  if (!isBig) {
+                      canv.width = 1200;
+                      chartArea.style.width = 1200;
+                      canv.height = 400;
+                      isBig = true;
+                  }
+                  else
+                  {
+                      canv.width = 500;
+                      chartArea.style.width = 500;
+                      canv.height = 400;
+                      isBig = false;
+                  }
+                  
+                  
+                
+                  chartArea.appendChild(canv);
+              
+                  graf = new Chart(canv, myGraph);
+                  // canvModal.drawImage(canv, 0, 0, 300, 300, 0, 0, 300, 300)
+                  
+                  // canv.style.width = 1200;
+                  // console.log(canv);
+                  // console.log(canvModal);
+                  // canvModal.width = canv.width;
+                  // canvModal.height = canv.height;
+                  // this.style.width = 1200;
+                  
+                  // chartArea.style.width = 1200;
+                  // graf.update();
+                  // graf.update();
+                  // canvModal.width = 1200;
+                  // canvModal.height = 1000;
+                  // modal.appendChild(canv);
+                  // modalImg.src = this.src;
+                  // captionText.innerHTML = this.alt;
+              }
+              // var span = document.getElementsByClassName("close")[0];
+
+              // // When the user clicks on <span> (x), close the modal
+              // span.onclick = function() { 
+              //     modal.style.display = "none";
+              // }
+              
+
+              // chartArea.scrollTo(100,100);
+
+              
+              
+              // var modalGraf = new Chart(canvModal, myGraph);
+              document.body.appendChild(chartArea);      
+              
+
+              projectGraphRef.on('value', function(projectUser) 
+              {
+                    var iUser = 0;                    
+                    var mostDays = 0;
+                    var configLabels = false;
+                    projectUser.forEach(function(childSnapshot) 
+                    {
+                      var childKey = childSnapshot.key;
+                      var userRef = firebase.database().ref('Uzivatel/' + childKey);
+                      var email = null;
+                      userRef.on('value', function(user)
+                      { 
+
+                          // KTERY UZIVATEL MA NEJVICE DAT
+                          if (childSnapshot.numChildren() > mostDays) {
+                              mostDays = childSnapshot.numChildren();
+                              configLabels = true;
+                          };
+                          if (user.val() != null) {
+                              email = user.val().email;
+                          };
+                              var childData = childSnapshot.val();
+
+                          if (childKey == "projectName" || childKey == "Ending") 
+                          {
+
+                            return;
+
+                          };
+                          // myGraph.data.labels = ["asd","ad"];
+                          myGraph = someGraphSetting(myGraph, iUser, childSnapshot, configLabels, email);
+                          
+                          configLabels = false;
+                          graf.update();
+                          // modalGraf.update();
+
+                          iUser++; 
+
+
+                      });
+                     
+                      
+                    });
+                    // console.log(myGraph.data.datasets);
+              });
+              
+
+              
+          });
+
+          
+          
+      });
+  }
+
+ 
+
+  
+
+  function someGraphSetting(myGraph, usersNumber, usersProjectValues, configLabels, email)
   {
 
     var yValues = [];
-    yValues.length = 0;
-    console.log("yVal");
-          console.log(myGraph.data);
+
+    // console.log(email);
+    
+    if (configLabels) {
+      myGraph.data.labels = [];
+    };
+    // console.log(myGraph);
+
     var yValuesMiss = [];
-
-    var y = parseFloat("0");
+    var y = 0;
     var firstEntry = {x: 0, y: y}; 
+    // yValues.push(firstEntry); // first entry is 0
 
-    yValues.push(firstEntry); // first entry is 0
-        
+    // console.log(configLabels);
+    
     var lastEntry = {x: 0, y: y}; 
-
     var lastMissEntry = null;
-        var i = 1;
+        var i = 0;
         var preReport = true; // solution for late addition of user and his missed reports
         var lastMiss = false;
         var thisMiss = false;;
         var date;
-
         // SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         // Calendar actDate = Calendar.getInstance();
         var dataset = {
                       label: "",
-                      backgroundColor: 'red',
-                      borderColor: 'red',
+                      backgroundColor: null,
+                      borderColor: null,
                       data: [
                       ],
                       fill: false
               
                     }
-
-          // PRVNI PRVEK JE ZVLAST                    
-          dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
-
-          myGraph.data.labels.push("prvni");
-          dataset.label = usersNumber;
-          dataset.data = [];
-          dataset.data = yValues;
-
-          // myGraph.data.datasets.push(dataset);
-          // dataset.data = [];
+          console.log("Prvni");
           
-          if (usersNumber == 0) 
-          {
-              return;
-                    dataset.backgroundColor = 'blue';
-                    dataset.borderColor = 'blue';
-          };      
+          // PRVNI PRVEK JE ZVLAST                    
+          // dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
+          // myGraph.data.labels.push("prvni");
+          // dataset.label = usersNumber;
 
-    var previousValue = lastEntry;
-    console.log(usersProjectValues.val());
+          // dataset.data = yValues.slice();
+          
+          // if (usersNumber == 1) 
+          // {
+          //     // return;
+          //           dataset.backgroundColor = 'blue';
+          //           dataset.borderColor = 'blue';
+          // };      
+
+      var previousValue = lastEntry;
+      var changeLabels = false;
+      // console.log(usersProjectValues.length);
+       if (myGraph.data.labels.length < usersProjectValues.length) 
+        {
+              changeLabels = true;
+              myGraph.data.labels = [];
+        };
+      
+      // console.log(usersProjectValues.numChildren());
+      var lastKey = null;
+
       usersProjectValues.forEach(function(usersValue)
-      {
-          dataset.data = [];
-              dataset = {
-                        label: usersNumber,
-                        backgroundColor: 'red',
-                        borderColor: 'red',
-                        data: [
-                        ],
-                        fill: false
+      {        
+             // dataset = {
+             //            label: usersNumber,
+             //            backgroundColor: null,
+             //            borderColor: null,
+             //            data: [
+             //            ],
+             //            fill: false
                 
-                      };
+             //          };
 
               if (usersValue == null) {
                   // return datasets;
               };
-
-              console.log(usersValue.key);
+              // console.log(usersValue.key);
               var smile = usersValue.val().sendValue;
-
               var key = usersValue.key;
+              lastKey = key;
               
               date = new Date(key);
+                        
               
-              
-              if (usersNumber == 0) 
-              {
-                  myGraph.data.labels.push(usersValue.key);
-              };
                   
-
               thisMiss = smile < -1;
-
               if (i == 1 && (firstDayShown == null || date < firstDayShown))
               {
                   firstDayShown = date;
@@ -296,14 +409,13 @@
                   // console.log(date.getDay());
                   firstDayOfWeek = (date.getDay()+ 5) % 7;
               };
-
               if (thisMiss) 
               { // just add new value to miss dataset
                   if (!lastMiss)
                   {
                     //TADY ZMENA, PROTOZE SE DAVALA HODNOTA, KTERA JIZ BYLA PRIDANA
                       // yValuesMiss.push(lastEntry);
-                      console.log("1");
+                      // console.log("1");
                       // console.log(yValuesMiss);
                   }
                       
@@ -320,77 +432,16 @@
                   {
            
                       console.log("3");
-                      console.log(yValuesMiss);
-                      console.log(yValues);
-                      console.log(myGraph.data);
-                      // dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
-                      if (myGraph.data.datasets != null) {
-                          var lastDataset = myGraph.data.datasets[myGraph.data.datasets.length -1];
-                          console.log(yValuesMiss);
-                          // yValues.unshift(previousValue);
-                          // console.log(yValues);
-                          if (lastDataset != null) {
+                      // console.log(yValuesMiss);
+                      // console.log(yValues);
 
-                            for (var i = 0; i < lastDataset.data.length - 1; i++) 
-                            {
-                                yValues.unshift(null);
-                            };
-                          };
-
-                      };
-                      
-                      
-                      
-                      // dataset.data = [];
-                      // yValues.push(null);
-                      dataset.data = yValues;              
-                      // dataset.data = dataset.data.concat(yValues);
-                      myGraph.data.datasets.push(dataset);
-                      console.log(dataset);
-
-                       // console.log(dataset.data);
-                      // dataset.data = [];
-                      dataset = {
-                        label: usersNumber,
-                        backgroundColor: 'blue',
-                        borderColor: 'blue',
-                        data: [
-                        ],
-                        fill: false
-                
-                      }
-
+                      dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
+                      dataset.data = dataset.data.concat(yValues);
 
                       // myGraph.data.datasets.push(dataset);
-                      // dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
-                      // dataset.data = [];
-                      yValuesMiss.unshift(yValues[yValues.length-1]);
-                      for (var i = 0; i < (yValues.length - 1); i++) 
-                      {
-                          yValuesMiss.unshift(null);
-                      };
+                      // console.log(dataset);
+                      dataset.data = dataset.data.concat(yValuesMiss); 
                       
-
-                      // yValuesMiss.push(yValues[yValues.length-1]);
-                      dataset.data = yValuesMiss;
-                      // dataset.data.push(null);
-                      // dataset.data = dataset.data.concat(yValuesMiss); 
-                      myGraph.data.datasets.push(dataset);
-
-                      console.log(dataset);
-                      dataset = {
-                        label: usersNumber,
-                        backgroundColor: 'red',
-                        borderColor: 'red',
-                        data: [
-                        ],
-                        fill: false
-                
-                      };
-                      // dataset.data = [];
-                      
-
-
                       // myGraph.data.datasets.push(dataset);
                       // console.log(dataset.data);
                       
@@ -402,57 +453,91 @@
                   }
 
                   y = translateEntry(y, smile);
-
                   yValues.push({x: i, y: y});
                   previousValue = {x: i, y: y};
                   console.log("4");
-                  console.log(myGraph.data);
+                  // console.log(yValues);
                   lastEntry = {x: i, y: y};
               }
-
-
               // console.log(previousValue);
               lastMiss = thisMiss;
               i++;
 
+              if (configLabels) 
+              {               
+                  if (i % 2 != 0) {
+                      myGraph.data.labels.push(usersValue.key);    
+                  } 
+                  else
+                  {
+                      myGraph.data.labels.push('');
+                  }
+                  
+              };
       });
+        // myGraph.data.labels.push('today');
               
+        if (configLabels) {
+
+            var isLastDate = myGraph.data.labels[myGraph.data.labels.length -1] != '';
+            var date = new Date(lastKey);
+            
+            var today = new Date();
+            // console.log(today);
+            // if (date < today) {
+            //     // console.log(date);
+            // };
 
 
+            for(var i = date.getDate() + 1; i <= today.getDate() ; i = i + 1)
+            {
+                if (isLastDate) {
+                    isLastDate = false;
+                    myGraph.data.labels.push('');
+                    
+                }
+                else
+                {
+                    var newDate = new Date();
+                    newDate.setDate(i);
+                    // i.setDate(i);           
+                    // console.log(newDate.toISOString().substring(0, 10));
+                    myGraph.data.labels.push(newDate.toISOString().substring(0, 10));  
+                    isLastDate = true;   
+                }
+                // var newDate = i
+                // i.setDate();   
+                
+
+                // newDate = i;
+                // return;
+            }
+            
+            // if (lastDate != '') {
+                // console.log(lastDate);
+                
+            // };
+            
+        };
 
         if (usersNumber == 0) 
         {
             usersNumber = false;
                           
         };
-
-        if (i-1 > numDays)
-        {
-            numDays = i-1;
-        }
-
+        // if (i-1 > numDays)
+        // {
+        //     numDays = i-1;
+        // }
         if (yValues.length > 0)
         { 
-            var plusSpace = myGraph.data.datasets[myGraph.data.datasets.length -1].data.length - 1;
-                        console.log("5");
-            console.log(myGraph.data);
-            var lastValueOfLastDataset = myGraph.data.datasets[myGraph.data.datasets.length -1].data[myGraph.data.datasets[myGraph.data.datasets.length -1].data.length -1];
-            yValues.unshift(lastValueOfLastDataset);
-            for (var i = 0; i < plusSpace; i++) 
-            {
-                yValues.unshift(null);
-            };
-            
-            
-            // dataset.data = dataset.data.concat(yValues); 
-            dataset.data = yValues; 
-            // dataset.data.push(null);
-            myGraph.data.datasets.push(dataset);
-            // dataset.data = [];
-            
+          
+            console.log("5");
+            dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
 
+            dataset.data = dataset.data.concat(yValues); 
+            // myGraph.data.datasets.push(dataset);
             // console.log(yValues);
-
         }
 
         if (yValuesMiss.length > 0)
@@ -460,90 +545,62 @@
             dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
             // yValuesMiss.unshift(previousValue);
             yValuesMiss.push(previousValue);
-            // dataset.data = dataset.data.concat(yValuesMiss); 
-            dataset.data = yValuesMiss; 
-            myGraph.data.datasets.push(dataset);
+            dataset.data = dataset.data.concat(yValuesMiss); 
+            // dataset.data = yValuesMiss; 
+            // myGraph.data.datasets.push(dataset);
             // dataset.data = [];
             
             console.log("6");
-            // console.log(dataset);
-            // console.log(yValuesMiss);
-
         }
-        console.log("Celkove");
-        console.log(myGraph.data);
-        // myGraph.data.datasets.push(dataset);
+        if (email != null) {
+            dataset.label = email;
+          };
+          console.log(myGraph.data);
+
+        myGraph.data.datasets.push(dataset);
+        return myGraph;
                 
   }
 
 
-  function showGraph(user)
+  function setDatasetColor(dataset, usersNumber)
   {
-     var userGraphRef = firebase.database().ref('Uzivatel/' + user.uid + '/Projects/-LA8343GgPB692j67alV');
-      userGraphRef.on('value', function(project) 
-      {
-          console.log(project.key);
-          myGraph.data.datasets.length = 0;
-
-          var projectGraphRef = firebase.database().ref('Projects/' + project.key);
-          projectGraphRef.on('value', function(projectUser) 
-          {
-                var iUser = 0;
-                projectUser.forEach(function(childSnapshot) 
-                {
-
-                  var childKey = childSnapshot.key;
-                  var childData = childSnapshot.val();
-
-                  if (childKey == "projectName") 
-                  {
-
-                    return;
-
-                  };
-
-                  // var dataset = {
-                  //   label: iUser,
-                  //   backgroundColor: 'blue',
-                  //   borderColor: 'yellow',
-                  //   data: [null,null,{x:2, y:5},{x:3, y:iUser}],
-                  //   fill: false
-                
-                  // }
-                  
-                  // var dataset1= {
-                  //   label: iUser,
-                  //   backgroundColor: 'red',
-                  //   borderColor: 'black',
-                  //   data: [{x:0, y:iUser},{x:1, y:2},{x:2, y:5}],
-                  //   fill: false
-                
-                  // }
-                  // if (iUser == 1) 
-                  // {
-                  //   dataset.backgroundColor = 'blue';
-                  //   dataset.borderColor = 'blue';
-                  // };
-
-
-                  myGraph.data.labels = ["dasd","as","","asd","s","1","11","1rre"];
-
-                  // myGraph.data.datasets.push(dataset1);
-                  // myGraph.data.datasets.push(dataset);
-
-                  someGraphSetting(iUser, childSnapshot);
-                  console.log(myGraph.data);
-                  
-
-                  window.myLine.update();
-
-                  iUser++;
-                  
-                });
-                
-          });
-      });
+      switch (usersNumber)
+        {
+            case 0: // Base_Red: #e57373, Miss_Red: #ffcdd2
+                    dataset.backgroundColor = "rgb(229, 115, 115)";
+                    dataset.borderColor =  "rgb(229, 115, 115)";
+                    // lineDataSet.setColor(Color.argb(255, 229, 115, 115));
+                    // lineDataSet.setCircleColor(Color.argb(255, 229, 115, 115));
+                break;
+            case 1: // Base_Light-Blue: #4fc3f7, Miss_Light-Blue: #b3e5fc
+                    dataset.backgroundColor = "rgb(79, 195, 247)"; 
+                    dataset.borderColor = "rgb(79, 195, 247)"; 
+                    // lineDataSet.setColor(Color.argb(255, 79, 195, 247));
+                    // lineDataSet.setCircleColor(Color.argb(255, 79, 195, 247));
+                break;
+            case 2: // Base_Green: #81c784, Miss_Green: #c8e6c9
+                    dataset.backgroundColor = "rgb(129, 199, 1325)"; 
+                    dataset.borderColor = "rgb(129, 199, 1325)"; 
+                    // lineDataSet.setColor(Color.argb(255, 129, 199, 132));
+                    // lineDataSet.setCircleColor(Color.argb(255, 129, 199, 132));
+                break;
+            case 3: // Base_Purple: #ba68c8, Miss_Purple: #e1bee7
+                    dataset.backgroundColor = "rgb(186, 104, 200)"; 
+                    dataset.borderColor = "rgb(186, 104, 200)"; 
+                    // lineDataSet.setColor(Color.argb(255, 186, 104, 200));
+                    // lineDataSet.setCircleColor(Color.argb(255, 186, 104, 200));
+                break;
+            default:
+                    dataset.backgroundColor = "rgb(229, 115, 115)"; 
+                    dataset.borderColor = "rgb(229, 115, 115)"; 
+                    // lineDataSet.setColor(Color.BLUE);
+                    // lineDataSet.setCircleColor(Color.BLUE);
+                break;
+        }
+        return dataset.backgroundColor;
   }
+  
 
   function translateEntry(old_y, smile)
   {
@@ -767,6 +824,46 @@
     //   window.myLine.update();
     // });
   
+   // function tryToDisplayTimeline(){
+    // add date and value
+    // console.log(myGraph.data.datasets[0].label);
+    // if (myGraph.data.labels.length == 0) {
+        // n =  new Date();
+        //     y = n.getFullYear();
+        //     m = n.getMonth() + 1;
+        //     d = n.getDate();
+        //     var now = d + "." + m + "." + y;
+        //     myGraph.data.labels.push(now);
+        //     myGraph.data.datasets.forEach((dataset) => {
+        //         dataset.data.push(2);
+
+        //   });
+        //     window.myLine.update(); 
+    // }
+    // else
+    // {
+    //   var lastDate = myGraph.data.labels[myGraph.data.labels.length - 1];   
+    //       var res = lastDate.split(".");
+    //       var newDay = parseInt(res[0]) + 1;
+    //       var newDate = newDay + "." + res[1] + "." + res[2];
+    //       console.log(myGraph.data.datasets[1].label);
+    //       var petersLine = myGraph.data.datasets[0];
+    //       var jirkasLine = myGraph.data.datasets[1];
+    //       myGraph.data.labels.push(newDate);
+
+    //           // var new_X = parseInt($('input[name="gender"]:checked').val()) + 
+    //           // parseInt(petersLine.data[petersLine.data.length - 1]);
+    //           if (myGraph.data.labels.length > 5) {
+    //           myGraph.data.labels.shift();
+    //           petersLine.data.shift();
+    //           // jirkasLine.data.shift();
+    //           };
+    //           petersLine.data.push(5);
+    //           // jirkasLine.data.push(0);         
+    //           window.myLine.update(); 
+                  
+    // }
+  // }
 
 
 </script>
