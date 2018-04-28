@@ -1,6 +1,10 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <meta name="google-signin-client_id" content="984038814608-l221clj0a3c05qaunenrm9oe9q3fvqif.apps.googleusercontent.com">
+  <meta name="google-signin-cookiepolicy" content="single_host_origin">
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
@@ -27,8 +31,45 @@
   <img src="graph.png" alt="Browser GUI" width="600">
 
 </section> -->
+<div class="topnav">
+  <div class='leftLink'>
+    <a href="#" id='myGraphs'>My Graphs</a>  
+  </div>
 
-<div id="top">
+  <div class='rightLink'>
+    <a href="#" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</a>
+  </div>
+
+  <div id="id01" class="modal">
+  
+    <form class="modal-content animate">
+      <div class="imgcontainer">
+        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>     
+      </div>
+
+      <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" id="email" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+          
+        <button type="submit" id="signIn" onclick="login()">Login</button>
+        <label>
+          <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+      </div>
+    </form>
+  </div>
+  
+</div>
+
+<div class="content">
+  <h2>NudgeMe</h2>
+  <p>A topnav, content and a footer.</p>
+</div>
+
+<!-- <div id="top">
     <div class="login">
         
         <div id="username">
@@ -45,21 +86,24 @@
           <button type="submit" id="signIn" onClick="signIn()">Sign In</button>
           <button type="submit" id="siqnUp" onClick="signUp()">Sign Up</button>
         </div>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
 
         
     </div>
 
     </div>
 
-</div>
+</div> -->
 
 
 <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
 
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 
 <script src="basicFunction.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
 <script>
   // Initialize Firebase
@@ -77,6 +121,24 @@
   // var dbref = firebase.database().ref().child('text');
   
   // dbref.on('value', snap => B.innerText = snap.val());
+  // Get the modal
+  var modal = document.getElementById('id01');
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+
+  var graphs = document.getElementById('myGraphs');
+  graphs.onclick = function(event){
+      firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+          window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+        }
+      });
+  }
 
     function signUp() {
 
@@ -105,7 +167,9 @@
     
   }
 
-  function signIn() {
+  function login() {
+
+      document.getElementById('id01').style.display='none';
       if (firebase.auth().currentUser) {
         // [START signout]
         console.log(firebase.auth().currentUser.email);
@@ -148,10 +212,68 @@
       //Handle Account Status
       firebase.auth().onAuthStateChanged(user => {
         if(user) {
-          window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+          // window.location = 'graph.html'; //After successful login, user will be redirected to home.html
         }
       });
       
+    }
+
+    function onSignIn(googleUser) {
+      console.log('Google Auth Response', googleUser);
+      // We need to register an Observer on Firebase Auth to make sure auth is initialized.
+      var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+        unsubscribe();
+        // Check if we are already signed-in Firebase with the correct user.
+        if (!isUserEqual(googleUser, firebaseUser)) {
+          // Build Firebase credential with the Google ID token.
+          // [START googlecredential]
+          var credential = firebase.auth.GoogleAuthProvider.credential(
+              googleUser.getAuthResponse().id_token);
+          // [END googlecredential]
+          // Sign in with credential from the Google user.
+          // [START authwithcred]
+          firebase.auth().signInWithCredential(credential).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // [START_EXCLUDE]
+            if (errorCode === 'auth/account-exists-with-different-credential') {
+              alert('You have already signed up with a different auth provider for that email.');
+              // If you are using multiple auth providers on your app you should handle linking
+              // the user's accounts here.
+            } else {
+              console.error(error);
+            }
+            // [END_EXCLUDE]
+          });
+          // [END authwithcred]
+        } else {
+          // window.location = 'graph.html';
+          console.log('User already signed-in Firebase.');
+        }
+      });
+    }
+    // [END googlecallback]
+    /**
+     * Check that the given Google user is equals to the given Firebase user.
+     */
+    // [START checksameuser]
+    function isUserEqual(googleUser, firebaseUser) {
+      if (firebaseUser) {
+        var providerData = firebaseUser.providerData;
+        for (var i = 0; i < providerData.length; i++) {
+          if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+              providerData[i].uid === googleUser.getBasicProfile().getId()) {
+            // We don't need to reauth the Firebase connection.
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
     // var table = document.getElementById("myTable");

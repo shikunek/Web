@@ -152,15 +152,21 @@ function showGraph(user)
                           xAxes: [{
                               display: true,
                               scaleLabel: {
-                                  display: true,
-                                  labelString: 'Month'
+                                  // display: true,
+                                  labelString: 'Time'
                               }
                           }],
                           yAxes: [{
                               display: true,
+                              ticks: {
+                                beginAtZero: true,
+                                max: 1,
+                                min: -1
+
+                              },
                               scaleLabel: {
                                   display: true,
-                                  labelString: 'Value'
+                                  labelString: 'Progress'
                               }
                           }]
                       },
@@ -191,7 +197,7 @@ function showGraph(user)
               var isBig = false;
               // chartArea.width = 400;
               // float: left; width: 600px; overflow:scroll;
-              chartArea.setAttribute("style", "width:600px; height: 450px;float:left; overflow-x: scroll");
+              chartArea.setAttribute("style", "width:600px; height: 450px;float:left;");
               // var captionText = document.getElementById("caption");
               chartArea.onclick = function(){
                   // graf = new Chart(canv, myGraph);
