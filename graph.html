@@ -5,9 +5,37 @@
 
 <body>
 
+<div class="topnav">
+  
+  <div class='rightLink'>
+    <a href="#" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</a>
+  </div>
+</div>
 
-	<h1 id="B"></h1>
 
+<div id="id01" class="modal">
+  
+    <form class="modal-content animate">
+      <div class="imgcontainer">
+        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>     
+      </div>
+
+      <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" id="email" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+          
+        <button type="submit" id="signIn" onclick="login()">Log In</button>
+        <label>
+          <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+        <div class="g-signin2" data-onsuccess="onSignIn" width="320px"></div>
+        <button type="submit" id="signOut" onclick="mySignOut()">Sign Out</button>
+      </div>
+    </form>
+  </div>
 <!-- <header id="header">
   <div class="inner">
     <nav id="menubar">
@@ -46,6 +74,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
 
 
@@ -89,6 +118,162 @@
     //   // window.myLine.update();
     // };
 
+    function mySignOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+        firebase.auth().signOut();
+        //Handle Account Status
+        // firebase.auth().onAuthStateChanged(user => {
+        //   if(!user) {
+        //     window.location = 'index.html'; //After successful login, user will be redirected to home.html
+        //   }
+        // });
+
+      });
+
+    }
+
+    function signUp() {
+
+     var username = document.getElementById("email").value;
+     var password = document.getElementById("psw").value;
+     firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // [START_EXCLUDE]
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+        // [END_EXCLUDE]
+      });
+
+           //Handle Account Status
+      firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+          window.location = 'index.html'; //After successful login, user will be redirected to home.html
+        }
+      });
+    
+  }
+
+  function login() {
+
+      document.getElementById('id01').style.display='none';
+      if (firebase.auth().currentUser) {
+        // [START signout]
+        console.log(firebase.auth().currentUser.email);
+        firebase.auth().signOut();
+        // [END signout]
+      } 
+      {
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('psw').value;
+        if (email.length < 4) {
+          alert('Please enter an email address.');
+          return;
+        }
+        if (password.length < 4) {
+          alert('Please enter a password.');
+          return;
+        }
+        // Sign in with email and pass.
+        // [START authwithemail]
+        var result = firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          
+
+          // [END_EXCLUDE]
+        });
+        
+        
+        // [END authwithemail]
+      }
+      
+      //Handle Account Status
+      firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+          window.location = 'index.html'; //After successful login, user will be redirected to home.html
+        }
+        else{
+          window.location = 'index.html';
+        }
+      });
+      
+    }
+
+    function onSignIn(googleUser) {
+      console.log('Google Auth Response', googleUser);
+      // We need to register an Observer on Firebase Auth to make sure auth is initialized.
+      var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+        unsubscribe();
+        // Check if we are already signed-in Firebase with the correct user.
+        if (!isUserEqual(googleUser, firebaseUser)) {
+          // Build Firebase credential with the Google ID token.
+          // [START googlecredential]
+          var credential = firebase.auth.GoogleAuthProvider.credential(
+              googleUser.getAuthResponse().id_token);
+          // [END googlecredential]
+          // Sign in with credential from the Google user.
+          // [START authwithcred]
+          firebase.auth().signInWithCredential(credential).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // [START_EXCLUDE]
+            if (errorCode === 'auth/account-exists-with-different-credential') {
+              alert('You have already signed up with a different auth provider for that email.');
+              // If you are using multiple auth providers on your app you should handle linking
+              // the user's accounts here.
+            } else {
+              console.error(error);
+            }
+            // [END_EXCLUDE]
+          });
+          // [END authwithcred]
+        } else {
+          // window.location = 'graph.html';
+          console.log('User already signed-in Firebase.');
+        }
+      });
+    }
+    // [END googlecallback]
+    /**
+     * Check that the given Google user is equals to the given Firebase user.
+     */
+    // [START checksameuser]
+    function isUserEqual(googleUser, firebaseUser) {
+      if (firebaseUser) {
+        var providerData = firebaseUser.providerData;
+        for (var i = 0; i < providerData.length; i++) {
+          if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+              providerData[i].uid === googleUser.getBasicProfile().getId()) {
+            // We don't need to reauth the Firebase connection.
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+
 
 
   firebase.auth().onAuthStateChanged(function(user) {
@@ -99,7 +284,7 @@
       showGraph(user);
     } else {
       // No user is signed in.
-      console.log("Nikdo");
+      console.log("Nikdo");    
     }
   });
 
@@ -152,7 +337,7 @@ function showGraph(user)
                           xAxes: [{
                               display: true,
                               scaleLabel: {
-                                  // display: true,
+                                  display: true,
                                   labelString: 'Time'
                               }
                           }],
@@ -355,7 +540,7 @@ function showGraph(user)
                       fill: false
               
                     }
-          console.log("Prvni");
+          // console.log("Prvni");
           
           // PRVNI PRVEK JE ZVLAST                    
           // dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
@@ -437,7 +622,7 @@ function showGraph(user)
                   if (lastMiss)
                   {
            
-                      console.log("3");
+                      // console.log("3");
                       // console.log(yValuesMiss);
                       // console.log(yValues);
 
@@ -461,7 +646,7 @@ function showGraph(user)
                   y = translateEntry(y, smile);
                   yValues.push({x: i, y: y});
                   previousValue = {x: i, y: y};
-                  console.log("4");
+                  // console.log("4");
                   // console.log(yValues);
                   lastEntry = {x: i, y: y};
               }
@@ -538,7 +723,7 @@ function showGraph(user)
         if (yValues.length > 0)
         { 
           
-            console.log("5");
+            // console.log("5");
             dataset.backgroundColor = setDatasetColor(dataset, usersNumber);
 
             dataset.data = dataset.data.concat(yValues); 
@@ -561,7 +746,7 @@ function showGraph(user)
         if (email != null) {
             dataset.label = email;
           };
-          console.log(myGraph.data);
+          // console.log(myGraph.data);
 
         myGraph.data.datasets.push(dataset);
         return myGraph;
@@ -687,6 +872,9 @@ function showGraph(user)
 
         return new_y;
   }
+
+
+
 
   //   firebase.database().ref('/Progress/Petr').once('value', function(snapshot) {
 //   snapshot.forEach(function(childSnapshot) {

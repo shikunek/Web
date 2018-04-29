@@ -1,4 +1,17 @@
+.google:hover {
+	background-color: #45a049;
+}
 
+#g-signin2 {
+	width: 200px;
+}
+
+#signOut {
+	background-color: #dd4b39;
+}
+#mySignOut {
+	background-color: #dd4b39;
+}
 
 .modal {
     display: none; /* Hidden by default */
@@ -161,10 +174,6 @@ button:hover {
     position: relative;
 }
 
-img.avatar {
-    width: 40%;
-    border-radius: 50%;
-}
 
 .container {
     padding: 16px;
@@ -256,3 +265,5 @@ span.psw {
   line-height: 20px;
   text-decoration: none; /* remove underline from anchors */
 }
+
+

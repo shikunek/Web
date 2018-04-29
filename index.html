@@ -33,7 +33,7 @@
 </section> -->
 <div class="topnav">
   <div class='leftLink'>
-    <a href="#" id='myGraphs'>My Graphs</a>  
+    <a href="#" id='myGraphs'>My projects</a>  
   </div>
 
   <div class='rightLink'>
@@ -54,10 +54,12 @@
         <label for="psw"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
           
-        <button type="submit" id="signIn" onclick="login()">Login</button>
+        <button type="submit" id="signIn" onclick="login()">Log In</button>
         <label>
           <input type="checkbox" checked="checked" name="remember"> Remember me
         </label>
+        <div class="g-signin2" data-onsuccess="onSignIn" width="320px"></div>
+        <button type="submit" id="signOut" onclick="mySignOut()">Sign Out</button>
       </div>
     </form>
   </div>
@@ -117,12 +119,10 @@
   };
   firebase.initializeApp(config);
 
-  // var B = document.getElementById('B');
-  // var dbref = firebase.database().ref().child('text');
-  
-  // dbref.on('value', snap => B.innerText = snap.val());
   // Get the modal
   var modal = document.getElementById('id01');
+
+
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
@@ -139,6 +139,14 @@
         }
       });
   }
+
+    function mySignOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+        document.getElementById('id01').style.display='none';
+      });
+    }
 
     function signUp() {
 
@@ -212,51 +220,51 @@
       //Handle Account Status
       firebase.auth().onAuthStateChanged(user => {
         if(user) {
-          // window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+          window.location = 'index.html'; //After successful login, user will be redirected to home.html
         }
       });
       
     }
 
-    function onSignIn(googleUser) {
-      console.log('Google Auth Response', googleUser);
-      // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-      var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
-        unsubscribe();
-        // Check if we are already signed-in Firebase with the correct user.
-        if (!isUserEqual(googleUser, firebaseUser)) {
-          // Build Firebase credential with the Google ID token.
-          // [START googlecredential]
-          var credential = firebase.auth.GoogleAuthProvider.credential(
-              googleUser.getAuthResponse().id_token);
-          // [END googlecredential]
-          // Sign in with credential from the Google user.
-          // [START authwithcred]
-          firebase.auth().signInWithCredential(credential).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // [START_EXCLUDE]
-            if (errorCode === 'auth/account-exists-with-different-credential') {
-              alert('You have already signed up with a different auth provider for that email.');
-              // If you are using multiple auth providers on your app you should handle linking
-              // the user's accounts here.
-            } else {
-              console.error(error);
-            }
-            // [END_EXCLUDE]
-          });
-          // [END authwithcred]
-        } else {
-          // window.location = 'graph.html';
-          console.log('User already signed-in Firebase.');
-        }
-      });
-    }
+    // function onSignIn(googleUser) {
+    //   console.log('Google Auth Response', googleUser);
+    //   // We need to register an Observer on Firebase Auth to make sure auth is initialized.
+    //   var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+    //     unsubscribe();
+    //     // Check if we are already signed-in Firebase with the correct user.
+    //     if (!isUserEqual(googleUser, firebaseUser)) {
+    //       // Build Firebase credential with the Google ID token.
+    //       // [START googlecredential]
+    //       var credential = firebase.auth.GoogleAuthProvider.credential(
+    //           googleUser.getAuthResponse().id_token);
+    //       // [END googlecredential]
+    //       // Sign in with credential from the Google user.
+    //       // [START authwithcred]
+    //       firebase.auth().signInWithCredential(credential).catch(function(error) {
+    //         // Handle Errors here.
+    //         var errorCode = error.code;
+    //         var errorMessage = error.message;
+    //         // The email of the user's account used.
+    //         var email = error.email;
+    //         // The firebase.auth.AuthCredential type that was used.
+    //         var credential = error.credential;
+    //         // [START_EXCLUDE]
+    //         if (errorCode === 'auth/account-exists-with-different-credential') {
+    //           alert('You have already signed up with a different auth provider for that email.');
+    //           // If you are using multiple auth providers on your app you should handle linking
+    //           // the user's accounts here.
+    //         } else {
+    //           console.error(error);
+    //         }
+    //         // [END_EXCLUDE]
+    //       });
+    //       // [END authwithcred]
+    //     } else {
+    //       // window.location = 'graph.html';
+    //       console.log('User already signed-in Firebase.');
+    //     }
+    //   });
+    // }
     // [END googlecallback]
     /**
      * Check that the given Google user is equals to the given Firebase user.
@@ -276,17 +284,6 @@
       return false;
     }
 
-    // var table = document.getElementById("myTable");
-
-    //   var newUserRef = firebase.database().ref('Users/');
-    //   newUserRef.on('child_added', function(data) {
-    //     console.log(data.val());
-    //       var row = table.insertRow(0);
-    //       var cell1 = row.insertCell(0);
-    //       var cell2 = row.insertCell(1);
-    //       cell1.innerHTML = data.val().name;
-    //       cell2.innerHTML = data.val().age;
-    //   });
 
   function addUsers()
   {
@@ -304,128 +301,7 @@
 
       firebase.database().ref().update(updates);
 
-
-            //   firebase.database().ref("Users").update({
-        //     [userName] : {
-        //         age : userAge
-        //       }
-        // });
-
   }
-
-  // function sendProgress()
-  // {
-      
-  //     firebase.database().ref('/Progress/' + 'Petr').once('value').then(function(snapshot) {
-  //       var old_X = snapshot.val().X;
-  //       var new_X = parseInt($('input[name="gender"]:checked').val()) + parseInt(old_X);
-  //       var newProgress = firebase.database().ref().child('Progress').push().key;
-  //       var updates = {};
-  //       var postData = {
-  //                 X : new_X,
-  //                 Y : new_X
-  //               };
-  //       updates['/Progress/' + 'Petr'] = postData;
-
-  //       firebase.database().ref().update(updates);
-  //     });
-      
-      
-  // }
-
-// var ctx = document.getElementById("myChart");
-
-// var myLineChart = new Chart(ctx, {
-//     type: 'line',
-//     data: {
-//             labels: ["January", "February", "March", "April", "May", "June", "July"],
-//                       datasets: [{
-//                           label: "My First dataset",
-//                           backgroundColor: "red",
-//                           borderColor: "red",
-//                           data: [
-//                               {
-//                                   x: 10,
-//                                   y: 20
-//                               }, 
-//                               {
-//                                   x: 15,
-//                                   y: 10
-//                               },
-//                               {
-//                                   x: 20,
-//                                   y: 15
-//                               }
-//                           ],
-
-//                           fill: false,
-//                         }]
-//     },
-//     options: {
-//                 scales: {
-//                     xAxes: [{
-//                           ticks: {
-//                               beginAtZero:true
-//                           }
-//                       }],
-//                     yAxes: [{
-//                         ticks: {
-//                             beginAtZero:true
-//                         }
-//                     }]
-//                 }
-//             }
-// });
-
-// document.getElementById('addData').addEventListener('click', function() {
-//             if (config.data.datasets.length > 0) {
-//                 var month = MONTHS[config.data.labels.length % MONTHS.length];
-//                 config.data.labels.push(month);
-
-//                 config.data.datasets.forEach(function(dataset) {
-//                     dataset.data.push(randomScalingFactor());
-//                 });
-
-//                 window.myLine.update();
-//             }
-//         });
-
-// var myChart = new Chart(ctx, {
-// type: 'bar',
-// data: {
-//     labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-//     datasets: [{
-//         label: '# of Votes',
-//         data: [12, 19, 3, 5, 2, 3],
-//         backgroundColor: [
-//             'rgba(255, 99, 132, 0.2)',
-//             'rgba(54, 162, 235, 0.2)',
-//             'rgba(255, 206, 86, 0.2)',
-//             'rgba(75, 192, 192, 0.2)',
-//             'rgba(153, 102, 255, 0.2)',
-//             'rgba(255, 159, 64, 0.2)'
-//         ],
-//         borderColor: [
-//             'rgba(255,99,132,1)',
-//             'rgba(54, 162, 235, 1)',
-//             'rgba(255, 206, 86, 1)',
-//             'rgba(75, 192, 192, 1)',
-//             'rgba(153, 102, 255, 1)',
-//             'rgba(255, 159, 64, 1)'
-//         ],
-//         borderWidth: 1
-//     }]
-// },
-// options: {
-//     scales: {
-//         yAxes: [{
-//             ticks: {
-//                 beginAtZero:true
-//             }
-//         }]
-//     }
-// }
-// });
 
 
 </script>
