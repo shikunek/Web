@@ -1,19 +1,25 @@
 <html>
 <head>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <meta name="google-signin-client_id" content="984038814608-l221clj0a3c05qaunenrm9oe9q3fvqif.apps.googleusercontent.com">
+  <meta name="google-signin-cookiepolicy" content="single_host_origin">
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
 
 <div class="topnav">
-  
-  <div class='rightLink'>
-    <a href="#" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</a>
+  <div class='leftLink' id='leftBar'>
+    <a href="#" id='mainPage'>Main</a>  
+    <a href="#" id='myGraphs' style="display: none">My projects</a>  
   </div>
-</div>
 
+  <div class='rightLink'>
+    <a href="#" style="width:auto;" id="login" onclick="document.getElementById('myModal').style.display='block'">Login</a>
+  </div>
 
-<div id="id01" class="modal">
+<!--   <div id="id01" class="modal">
   
     <form class="modal-content animate">
       <div class="imgcontainer">
@@ -25,17 +31,53 @@
         <input type="text" placeholder="Enter Username" name="uname" id="email" required>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        <input type="password" placeholder="Enter Password" name="psw" id="password" required>
           
-        <button type="submit" id="signIn" onclick="login()">Log In</button>
+        <button type="submit" id="signIn" onclick="signInE()" type="button">Log In</button>
         <label>
           <input type="checkbox" checked="checked" name="remember"> Remember me
         </label>
         <div class="g-signin2" data-onsuccess="onSignIn" width="320px"></div>
-        <button type="submit" id="signOut" onclick="mySignOut()">Sign Out</button>
+        <button type="submit" id="signOut" onclick="signOut()">Sign Out</button>
       </div>
     </form>
-  </div>
+  </div> -->
+
+  <div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+      <div class="imgcontainer">
+        <span onclick="document.getElementById('myModal').style.display='none'" class="close" title="Close Modal">&times;</span>
+      </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <!-- <form role="form"> -->
+            <div class="form-group">
+              <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+              <input type="text" class="form-control" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" value="" checked>Remember me</label>
+            </div>
+              <button type="submit" onclick="signIn()" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+              <button type="submit" onclick="signOut()" id="mySignOut" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Sign Out</button>
+          <!-- </form> -->
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+</div>
+  
+</div>
 <!-- <header id="header">
   <div class="inner">
     <nav id="menubar">
@@ -73,9 +115,13 @@
 </div> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="basicFunction.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
 
@@ -90,100 +136,44 @@
     var firstDayShown = null; // Date
     // var yValues = [];
 
-  var config = {
+ var config = {
     apiKey: "AIzaSyAR7L3KrsOWXYqu0HMcM85EOBPKWSOF9t0",
     authDomain: "testapp-5cce5.firebaseapp.com",
     databaseURL: "https://testapp-5cce5.firebaseio.com",
     projectId: "testapp-5cce5",
-    storageBucket: "",
+    storageBucket: "testapp-5cce5.appspot.com",
     messagingSenderId: "984038814608"
   };
   firebase.initializeApp(config);
 
-  // window.onload = init();
 
-  // function init()
-  // {
-     
-  //     // window.myLine = new Chart(ctx, myGraph);
-  // }
- // var ctx = document.getElementById("myChart").getContext('2d');
- //  window.myLine = new Chart(ctx, myGraph);  
-
-
-
-    // window.onload = function() {
-    //   var ctx = document.getElementById('myChart').getContext('2d');
-    //   window.myLine = new Chart(ctx, myGraph);
-    //   // window.myLine.update();
-    // };
-
-    function mySignOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-        firebase.auth().signOut();
-        //Handle Account Status
-        // firebase.auth().onAuthStateChanged(user => {
-        //   if(!user) {
-        //     window.location = 'index.html'; //After successful login, user will be redirected to home.html
-        //   }
-        // });
-
-      });
-
-    }
-
-    function signUp() {
-
-     var username = document.getElementById("email").value;
-     var password = document.getElementById("psw").value;
-     firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // [START_EXCLUDE]
-        if (errorCode == 'auth/weak-password') {
-          alert('The password is too weak.');
-        } else {
-          alert(errorMessage);
-        }
-        console.log(error);
-        // [END_EXCLUDE]
-      });
-
-           //Handle Account Status
-      firebase.auth().onAuthStateChanged(user => {
+  firebase.auth().onAuthStateChanged(user => {
         if(user) {
-          window.location = 'index.html'; //After successful login, user will be redirected to home.html
+          console.log(user.email);
+          document.getElementById('myGraphs').style.display = 'block';   
+          // KDYZ JE UZIVATEL PRIHLASEN, TAK SE VYKRESLI GRAFY
+          showGraph(user);       
+        }
+        else{
+          console.log('Nikdo'); 
+          // window.location.href = 'graph.html'; 
         }
       });
-    
-  }
 
-  function login() {
+  function signIn() {
 
-      document.getElementById('id01').style.display='none';
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+
       if (firebase.auth().currentUser) {
         // [START signout]
-        console.log(firebase.auth().currentUser.email);
         firebase.auth().signOut();
-        // [END signout]
-      } 
-      {
-        var email = document.getElementById('email').value;
-        var password = document.getElementById('psw').value;
-        if (email.length < 4) {
-          alert('Please enter an email address.');
-          return;
-        }
-        if (password.length < 4) {
-          alert('Please enter a password.');
-          return;
-        }
-        // Sign in with email and pass.
-        // [START authwithemail]
-        var result = firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        // ODDELANI VSECH GRAFU A ZNOVU NACTENI
+        $( ".chartArea" ).remove();
+        $( "#mainDiv" ).remove();
+
+        console.log('Sign Out Succ');
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -194,67 +184,79 @@
             alert(errorMessage);
           }
           console.log(error);
-          
-
+          // document.getElementById('quickstart-sign-in').disabled = false;
           // [END_EXCLUDE]
         });
+        // [END signout]
+      } else {
         
-        
+        if (email.length < 4) {
+          alert('Please enter an email address.');
+          return;
+        }
+        if (password.length < 4) {
+          alert('Please enter a password.');
+          return;
+        }
+        console.log('Novy');
+        // Sign in with email and pass.
+        // [START authwithemail]
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          // document.getElementById('quickstart-sign-in').disabled = false;
+          // [END_EXCLUDE]
+        });
         // [END authwithemail]
       }
-      
-      //Handle Account Status
-      firebase.auth().onAuthStateChanged(user => {
-        if(user) {
-          window.location = 'index.html'; //After successful login, user will be redirected to home.html
-        }
-        else{
-          window.location = 'index.html';
-        }
-      });
-      
+      document.getElementById('myModal').style.display='none';
+      // document.getElementById('quickstart-sign-in').disabled = true;
     }
 
-    function onSignIn(googleUser) {
-      console.log('Google Auth Response', googleUser);
-      // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-      var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
-        unsubscribe();
-        // Check if we are already signed-in Firebase with the correct user.
-        if (!isUserEqual(googleUser, firebaseUser)) {
-          // Build Firebase credential with the Google ID token.
-          // [START googlecredential]
-          var credential = firebase.auth.GoogleAuthProvider.credential(
-              googleUser.getAuthResponse().id_token);
-          // [END googlecredential]
-          // Sign in with credential from the Google user.
-          // [START authwithcred]
-          firebase.auth().signInWithCredential(credential).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // The email of the user's account used.
-            var email = error.email;
-            // The firebase.auth.AuthCredential type that was used.
-            var credential = error.credential;
-            // [START_EXCLUDE]
-            if (errorCode === 'auth/account-exists-with-different-credential') {
-              alert('You have already signed up with a different auth provider for that email.');
-              // If you are using multiple auth providers on your app you should handle linking
-              // the user's accounts here.
-            } else {
-              console.error(error);
-            }
-            // [END_EXCLUDE]
-          });
-          // [END authwithcred]
-        } else {
-          // window.location = 'graph.html';
-          console.log('User already signed-in Firebase.');
-        }
-      });
+    function signOut(){
+      firebase.auth().signOut().then(function() {
+          // Sign-out successful.
+          console.log('Sign Out');
+          document.getElementById('myModal').style.display='none';
+          window.location.href = 'index.html'; 
+        }).catch(function(error) {
+          // An error happened.
+        });
     }
-    // [END googlecallback]
+
+
+  // Get the modal
+  // var modal = document.getElementById('id01');
+
+
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == myModal) {
+          myModal.style.display = "none";
+      }
+  }
+
+  var graphs = document.getElementById('myGraphs');
+  graphs.onclick = function(event){
+      window.location.href = 'graph.html'; //After successful login, user will be redirected to home.html    
+  }
+
+  var main = document.getElementById('mainPage');
+  main.onclick = function(event){
+      window.location.href = 'index.html';
+  }
+
+
+ 
     /**
      * Check that the given Google user is equals to the given Firebase user.
      */
@@ -274,37 +276,28 @@
     }
 
 
-
-
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      // User is signed in.
-      console.log(user.email);
-      actualUser = user;
-      showGraph(user);
-    } else {
-      // No user is signed in.
-      console.log("Nikdo");    
-    }
-  });
-
 function showGraph(user)
   {
-        
-
       var userGraphsRef = firebase.database().ref('Uzivatel/' + user.uid + '/Projects');
       
+      var mainDiv = document.createElement("div");    
+      mainDiv.id = 'mainDiv';
+      mainDiv.setAttribute("style", "text-align: center;width:auto;margin:0 auto");
+      
+      
       userGraphsRef.on('value', function(projects) 
-      {                    
+      {       
+          var i = 0;             
           projects.forEach(function(project)
           {
+
               var projectGraphRef = firebase.database().ref('Projects/' + project.key);  
               
               // console.log(project.val());
               // SEM DAT PRIDAVANI ELEMENTU S GRAFEM    
               
-
-
+              // if (i != 0) {return;};
+              i++;
 
               var myGraph = {
                   type: 'line',
@@ -313,21 +306,40 @@ function showGraph(user)
                       datasets: [
                       ]
                   },
-                  width: 300,
-                  height: 300,
+                  width: 500,
+                  height: 400,
                   options: {
-                      responsive: false,
+                      responsive: true,
                       legend: {
                           display: true,
                           
+                      },
+                      gridLines: {
+                        display: false,
+                        drawBorder: true,
+                        drawOnChartArea: false,
                       },
                       title:{
                           display:true,
                           text: project.val().projectName
                       },
                       tooltips: {
-                          mode: 'index',
-                          intersect: false,
+                          callbacks: {
+                              labelColor: function(tooltipItem, chart) {
+                                  return {
+                                      borderColor: 'rgb(255, 0, 0)',
+                                      backgroundColor: 'rgb(255, 0, 0)'
+                                  }
+                              },
+                              labelTextColor:function(tooltipItem, chart){
+                                  return '#543453';
+                              },
+                              label: function(tooltipItems, data) { 
+                                  return data.datasets[tooltipItems.datasetIndex].label;
+                                  // return tooltipItems.yLabel;
+                              }
+
+                          }
                       },
                       hover: {
                           mode: 'nearest',
@@ -339,6 +351,9 @@ function showGraph(user)
                               scaleLabel: {
                                   display: true,
                                   labelString: 'Time'
+                              },
+                              gridLines: {
+                                  display:false
                               }
                           }],
                           yAxes: [{
@@ -348,6 +363,9 @@ function showGraph(user)
                                 max: 1,
                                 min: -1
 
+                              },
+                              gridLines: {
+                                  display:false
                               },
                               scaleLabel: {
                                   display: true,
@@ -375,14 +393,22 @@ function showGraph(user)
               canv.width = 500;
               canv.height = 400;
               
-              var graf = new Chart(canv, myGraph);
+              // canv.setAttribute('height', '400');
+              // canv.setAttribute("style", "border: 1px solid red");
+              // canv.setAttribute('width', 'inherit');
+              
+              // console.log(graf);
               var chartArea = document.createElement("div");
               chartArea.className = 'chartArea';
+              chartArea.id = 'chartAr';
               chartArea.appendChild(canv);
               var isBig = false;
               // chartArea.width = 400;
               // float: left; width: 600px; overflow:scroll;
-              chartArea.setAttribute("style", "width:600px; height: 450px;float:left;");
+              chartArea.setAttribute("style", " width: 500; height: 400;display:inline-block;");
+
+              
+              var graf = new Chart(canv, myGraph);
               // var captionText = document.getElementById("caption");
               chartArea.onclick = function(){
                   // graf = new Chart(canv, myGraph);
@@ -392,15 +418,21 @@ function showGraph(user)
                   canv.id = project.key;
                 
                   if (!isBig) {
-                      canv.width = 1200;
-                      chartArea.style.width = 1200;
+                      chartArea.style.width = '100%';
+                      chartArea.style.height = 550;
+                      canv.style.width = 1200
+                      chartArea.style.marginLeft = '0';
+                      chartArea.style.marginRight = '0';
                       canv.height = 400;
                       isBig = true;
                   }
                   else
                   {
-                      canv.width = 500;
+                      canv.setAttribute('width', 500);
                       chartArea.style.width = 500;
+                      chartArea.style.height = 400;
+                      // chartArea.style.marginLeft = '5%';
+                      // chartArea.style.marginRight = '5%';
                       canv.height = 400;
                       isBig = false;
                   }
@@ -441,14 +473,14 @@ function showGraph(user)
               
               
               // var modalGraf = new Chart(canvModal, myGraph);
-              document.body.appendChild(chartArea);      
+              mainDiv.appendChild(chartArea);      
               
 
               projectGraphRef.on('value', function(projectUser) 
               {
                     var iUser = 0;                    
                     var mostDays = 0;
-                    var configLabels = false;
+                    var configLabels = false;                  
                     projectUser.forEach(function(childSnapshot) 
                     {
                       var childKey = childSnapshot.key;
@@ -459,6 +491,7 @@ function showGraph(user)
 
                           // KTERY UZIVATEL MA NEJVICE DAT
                           if (childSnapshot.numChildren() > mostDays) {
+                            console.log(project.val().projectName);
                               mostDays = childSnapshot.numChildren();
                               configLabels = true;
                           };
@@ -497,6 +530,7 @@ function showGraph(user)
           
           
       });
+      document.body.appendChild(mainDiv);
   }
 
  
@@ -657,6 +691,7 @@ function showGraph(user)
               if (configLabels) 
               {               
                   if (i % 2 != 0) {
+                      lastKey = usersValue.key;
                       myGraph.data.labels.push(usersValue.key);    
                   } 
                   else
@@ -674,35 +709,38 @@ function showGraph(user)
             var date = new Date(lastKey);
             
             var today = new Date();
-            // console.log(today);
-            // if (date < today) {
-            //     // console.log(date);
-            // };
 
+            while(date < today){
+               // console.log(date); // ISO Date format          
 
-            for(var i = date.getDate() + 1; i <= today.getDate() ; i = i + 1)
-            {
                 if (isLastDate) {
                     isLastDate = false;
                     myGraph.data.labels.push('');
                     
                 }
                 else
-                {
-                    var newDate = new Date();
-                    newDate.setDate(i);
+                {                    
                     // i.setDate(i);           
                     // console.log(newDate.toISOString().substring(0, 10));
-                    myGraph.data.labels.push(newDate.toISOString().substring(0, 10));  
+                    myGraph.data.labels.push(date.toISOString().substring(0, 10));  
                     isLastDate = true;   
                 }
-                // var newDate = i
-                // i.setDate();   
+
+               var newDate = date.setDate(date.getDate() + 1);
+               date = new Date(newDate);
+            }
+
+            // for(var i = date.getDate() + 1; i <= today.getDate() ; i = i + 1)
+            // {
+                
+                
+            //     // var newDate = i
+            //     // i.setDate();   
                 
 
-                // newDate = i;
-                // return;
-            }
+            //     // newDate = i;
+            //     // return;
+            // }
             
             // if (lastDate != '') {
                 // console.log(lastDate);
@@ -771,8 +809,8 @@ function showGraph(user)
                     // lineDataSet.setCircleColor(Color.argb(255, 79, 195, 247));
                 break;
             case 2: // Base_Green: #81c784, Miss_Green: #c8e6c9
-                    dataset.backgroundColor = "rgb(129, 199, 1325)"; 
-                    dataset.borderColor = "rgb(129, 199, 1325)"; 
+                    dataset.backgroundColor = "rgb(129, 199, 132)"; 
+                    dataset.borderColor = "rgb(129, 199, 132)"; 
                     // lineDataSet.setColor(Color.argb(255, 129, 199, 132));
                     // lineDataSet.setCircleColor(Color.argb(255, 129, 199, 132));
                 break;
@@ -782,6 +820,19 @@ function showGraph(user)
                     // lineDataSet.setColor(Color.argb(255, 186, 104, 200));
                     // lineDataSet.setCircleColor(Color.argb(255, 186, 104, 200));
                 break;
+            case 4:
+                    dataset.backgroundColor = "rgb(249, 249, 6)"; 
+                    dataset.borderColor = "rgb(249, 249, 6)"; 
+                // lineDataSet.setColor(Color.argb(255, 249, 249, 6));
+                // lineDataSet.setCircleColor(Color.argb(255, 249, 249, 6));
+                break;
+
+            case 5:
+                    dataset.backgroundColor = "rgb(255, 119, 250)"; 
+                    dataset.borderColor = "rgb(255, 119, 250)"; 
+                // lineDataSet.setColor(Color.argb(255, 255, 119, 250));
+                // lineDataSet.setCircleColor(Color.argb(255, 255, 119, 250));
+                break;   
             default:
                     dataset.backgroundColor = "rgb(229, 115, 115)"; 
                     dataset.borderColor = "rgb(229, 115, 115)"; 
@@ -807,19 +858,19 @@ function showGraph(user)
                     x_delta = Math.tan(old_y * (Math.PI / 2));
                     x_delta = shiftPar + x_delta;
                     new_y = (Math.atan(x_delta)/(Math.PI / 2));
-                    //Log.d("F1", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F1", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 case  0: // function (4)
                     x_delta = (-1 * (Math.tan(old_y * (Math.PI / 2) - (Math.PI / 2))));
                     x_delta = shiftPar + x_delta;
                     new_y = (Math.atan(-1 * x_delta) / (Math.PI / 2) + 1);
-                    //Log.d("F4", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F4", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 case -1: // function (6)
                     x_delta = (-1 * (Math.tan(old_y * (Math.PI / 4) - (Math.PI / 4))));
                     x_delta = shiftPar + x_delta;
                     new_y = (2 * (Math.atan(-1 * x_delta) / (Math.PI / 2)) + 1);
-                    //Log.d("F6", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F6", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 default:
                     throw "Smile not within bounds [-1,0,1]";
@@ -831,19 +882,19 @@ function showGraph(user)
                     x_delta = Math.tan(old_y * (Math.PI / 4) + (Math.PI / 4));
                     x_delta = shiftPar + x_delta;
                     new_y = (2 * (Math.atan(x_delta)/(Math.PI / 2)) - 1);
-                    //Log.d("F5", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F5", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 case  0: // function (3)
                     x_delta = Math.tan(old_y * (Math.PI / 2) + (Math.PI / 2));
                     x_delta = shiftPar + x_delta;
                     new_y = (Math.atan(x_delta)/(Math.PI / 2) - 1);
-                    //Log.d("F3", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F3", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 case -1: // function (2)
                     x_delta = (-1 * (Math.tan(old_y * (Math.PI / 2))));
                     x_delta = shiftPar + x_delta;
                     new_y = (Math.atan(-1 * x_delta) / (Math.PI / 2));
-                    //Log.d("F2", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F2", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 default:
                     throw "Smile not within bounds [-1,0,1]";
@@ -855,7 +906,7 @@ function showGraph(user)
                     x_delta = Math.tan(old_y * (Math.PI / 2));
                     x_delta = shiftPar + x_delta;
                     new_y = (Math.atan(x_delta) / (Math.PI / 2));
-                    //Log.d("F1", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F1", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 case  0:
                     break;
@@ -863,7 +914,7 @@ function showGraph(user)
                     x_delta = (-1 * (Math.tan(old_y * (Math.PI / 2))));
                     x_delta = shiftPar + x_delta;
                     new_y = (Math.atan(-1 * x_delta) / (Math.PI / 2));
-                    //Log.d("F2", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
+                    // console.log("F2", "y_old: " + old_y + ", smile: " + smile + ",\nx_d: " + x_delta + ", new_y: " + new_y + "\n");
                     break;
                 default:
                     throw "Smile not within bounds [-1,0,1]";
@@ -1058,6 +1109,198 @@ function showGraph(user)
                   
     // }
   // }
+
+ // var graphs = document.getElementById('myGraphs');
+  // graphs.onclick = function(event){
+  //     firebase.auth().onAuthStateChanged(user => {
+  //       if(user) {
+  //         window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+  //       }
+  //     });
+  // }
+
+  // var main = document.getElementById('mainPage');
+  // main.onclick = function(event){
+  //     window.location = 'index.html';
+  // }
+
+
+  // window.onload = function(){
+  //     ///MOZNA DELA PROBLEM, ZE JE VOLANO VZDY
+  //   firebase.auth().onAuthStateChanged(function(user) {
+  //   if (user) {
+  //     // User is signed in.
+  //     console.log(user.email);
+  //     actualUser = user;
+  //     showGraph(user);
+  //   } else {
+  //     // No user is signed in.
+  //     console.log("Nikdo");    
+  //   }
+  // });
+  // }
+  
+
+
+
+    // function mySignOut() {
+    //   firebase.auth().signOut().then(function() {
+    //     // Sign-out successful.
+    //       console.log('Povedlo se.');
+    //       document.getElementById('id01').style.display = 'none';
+    //       // window.location.href = 'index.html';
+    //     }).catch(function(error) {
+    //       // An error happened.
+    //       console.log('Neco je spatne.');
+    //     });;  
+    //     //Handle Account Status
+    //     // firebase.auth().onAuthStateChanged(user => {
+    //     //   if(!user) {
+    //     //     console.log('Get out.');
+    //     //     window.location.href = 'index.html'; //After successful login, user will be redirected to home.html
+    //     //   }
+    //     // });
+
+    
+
+    // }
+
+    // function signUp() {
+
+    //  var username = document.getElementById("email").value;
+    //  var password = document.getElementById("psw").value;
+    //  firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
+    //     // Handle Errors here.
+    //     var errorCode = error.code;
+    //     var errorMessage = error.message;
+    //     // [START_EXCLUDE]
+    //     if (errorCode == 'auth/weak-password') {
+    //       alert('The password is too weak.');
+    //     } else {
+    //       alert(errorMessage);
+    //     }
+    //     console.log(error);
+    //     // [END_EXCLUDE]
+    //   });
+
+    //        //Handle Account Status
+    //   firebase.auth().onAuthStateChanged(user => {
+    //     if(user) {
+    //       window.location = 'index.html'; //After successful login, user will be redirected to home.html
+    //     }
+    //   });
+    
+  // }
+
+  // function login() {
+
+  //     document.getElementById('id01').style.display='none';
+  //     if (firebase.auth().currentUser) {
+  //       // [START signout]
+  //       console.log(firebase.auth().currentUser.email);
+  //       // firebase.auth().signOut();
+  //       // [END signout]
+  //     }
+  //     // else 
+  //     // {
+  //       var email = document.getElementById('email').value;
+  //       var password = document.getElementById('psw').value;
+  //       if (email.length < 4) {
+  //         alert('Please enter an email address.');
+  //         return;
+  //       }
+  //       if (password.length < 4) {
+  //         alert('Please enter a password.');
+  //         return;
+  //       }
+  //       console.log("Nove prihlaseni");
+  //       console.log(email);
+  //       console.log(password);
+  //       // Sign in with email and pass.
+  //       // [START authwithemail]
+  //       var result = firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+  //         // Handle Errors here.
+  //         var errorCode = error.code;
+  //         var errorMessage = error.message;
+  //         // [START_EXCLUDE]
+  //         if (errorCode === 'auth/wrong-password') {
+  //           alert('Wrong password.');
+  //         } 
+  //         else if (errorCode === 'auth/invalid-email') {
+  //           alert('invalid-email.');
+  //         } 
+  //         else if (errorCode === 'auth/user-disabled') {
+  //           alert('user-disabled.');
+  //         } 
+  //         else if (errorCode === 'auth/user-not-found') {
+  //           alert('user-not-found.');
+  //         } 
+  //         else {
+  //           console.log("Spatne prihlasovani");
+  //           alert(errorMessage);
+  //         }
+  //         console.log(error);
+          
+
+  //         // [END_EXCLUDE]
+  //       });
+        
+        
+        // [END authwithemail]
+      // }
+      
+      //Handle Account Status
+      // firebase.auth().onAuthStateChanged(user => {
+      //   if(user) {
+      //     window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+      //   }
+      //   else{
+      //     window.location = 'index.html';
+      //   }
+      // });
+      
+    // }
+
+    // function onSignIn(googleUser) {
+    //   console.log('Google Auth Response', googleUser);
+    //   // We need to register an Observer on Firebase Auth to make sure auth is initialized.
+    //   var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+    //     unsubscribe();
+    //     // Check if we are already signed-in Firebase with the correct user.
+    //     if (!isUserEqual(googleUser, firebaseUser)) {
+    //       // Build Firebase credential with the Google ID token.
+    //       // [START googlecredential]
+    //       var credential = firebase.auth.GoogleAuthProvider.credential(
+    //           googleUser.getAuthResponse().id_token);
+    //       // [END googlecredential]
+    //       // Sign in with credential from the Google user.
+    //       // [START authwithcred]
+    //       firebase.auth().signInWithCredential(credential).catch(function(error) {
+    //         // Handle Errors here.
+    //         var errorCode = error.code;
+    //         var errorMessage = error.message;
+    //         // The email of the user's account used.
+    //         var email = error.email;
+    //         // The firebase.auth.AuthCredential type that was used.
+    //         var credential = error.credential;
+    //         // [START_EXCLUDE]
+    //         if (errorCode === 'auth/account-exists-with-different-credential') {
+    //           alert('You have already signed up with a different auth provider for that email.');
+    //           // If you are using multiple auth providers on your app you should handle linking
+    //           // the user's accounts here.
+    //         } else {
+    //           console.error(error);
+    //         }
+    //         // [END_EXCLUDE]
+    //       });
+    //       // [END authwithcred]
+    //     } else {
+    //       // window.location = 'graph.html';
+    //       console.log('User already signed-in Firebase.');
+    //     }
+    //   });
+    // }
+    // [END googlecallback]
 
 
 </script>

@@ -5,12 +5,11 @@
   <meta name="google-signin-cookiepolicy" content="single_host_origin">
   <meta name="google-signin-scope" content="profile email">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 </head>
 
 <body>
 
-
-	<h1 id="B"></h1>
 
 <!-- <header id="header">
   <div class="inner">
@@ -32,15 +31,16 @@
 
 </section> -->
 <div class="topnav">
-  <div class='leftLink'>
-    <a href="#" id='myGraphs'>My projects</a>  
+  <div class='leftLink' id='leftBar'>
+    <a href="#" id='mainPage'>Main</a>  
+    <a href="#" id='myGraphs' style="display: none">My projects</a>  
   </div>
 
   <div class='rightLink'>
-    <a href="#" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</a>
+    <a href="#" style="width:auto;" id="login" onclick="document.getElementById('myModal').style.display='block'">Login</a>
   </div>
 
-  <div id="id01" class="modal">
+<!--   <div id="id01" class="modal">
   
     <form class="modal-content animate">
       <div class="imgcontainer">
@@ -52,26 +52,62 @@
         <input type="text" placeholder="Enter Username" name="uname" id="email" required>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        <input type="password" placeholder="Enter Password" name="psw" id="password" required>
           
-        <button type="submit" id="signIn" onclick="login()">Log In</button>
+        <button type="submit" id="signIn" onclick="signInE()" type="button">Log In</button>
         <label>
           <input type="checkbox" checked="checked" name="remember"> Remember me
         </label>
         <div class="g-signin2" data-onsuccess="onSignIn" width="320px"></div>
-        <button type="submit" id="signOut" onclick="mySignOut()">Sign Out</button>
+        <button type="submit" id="signOut" onclick="signOut()">Sign Out</button>
       </div>
     </form>
-  </div>
+  </div> -->
+
+  <div class="container">
+
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+  
+      <div class="modal-content">
+      <div class="imgcontainer">
+        <span onclick="document.getElementById('myModal').style.display='none'" class="close" title="Close Modal">&times;</span>
+      </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <!-- <form role="form"> -->
+            <div class="form-group">
+              <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+              <input type="text" class="form-control" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" value="" checked>Remember me</label>
+            </div>
+              <button type="submit" onclick="signIn()" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+              <button type="submit" onclick="signOut()" id="mySignOut" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Sign Out</button>
+          <!-- </form> -->
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+</div>
   
 </div>
+
+
+
 
 <div class="content">
   <h2>NudgeMe</h2>
   <p>A topnav, content and a footer.</p>
 </div>
 
-<!-- <div id="top">
+<!--   <div id="top">
     <div class="login">
         
         <div id="username">
@@ -79,34 +115,36 @@
           <input type="text" placeholder="Enter Username" id="email" required>
         </div>
         
-        <div id="password">
+        <div id="psw">
           <label><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" id="psw" required>
+          <input type="password" placeholder="Enter Password" id="password" required>
         </div>
         
         <div id="loginButtons">
           <button type="submit" id="signIn" onClick="signIn()">Sign In</button>
-          <button type="submit" id="siqnUp" onClick="signUp()">Sign Up</button>
+          <button type="submit" id="signOut" onClick="signOut()">Sign Up</button>
         </div>
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
 
         
     </div>
 
-    </div>
+  </div> -->
 
-</div> -->
+</div>
 
 
 <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="basicFunction.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script>
   // Initialize Firebase
   var config = {
@@ -114,90 +152,33 @@
     authDomain: "testapp-5cce5.firebaseapp.com",
     databaseURL: "https://testapp-5cce5.firebaseio.com",
     projectId: "testapp-5cce5",
-    storageBucket: "",
+    storageBucket: "testapp-5cce5.appspot.com",
     messagingSenderId: "984038814608"
   };
   firebase.initializeApp(config);
 
-  // Get the modal
-  var modal = document.getElementById('id01');
-
-
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
-      if (event.target == modal) {
-          modal.style.display = "none";
-      }
-  }
-
-  var graphs = document.getElementById('myGraphs');
-  graphs.onclick = function(event){
       firebase.auth().onAuthStateChanged(user => {
         if(user) {
-          window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+          console.log(user.email);
+          document.getElementById('myGraphs').style.display = 'block';          
+        }
+        else{
+          console.log('Nikdo');
+           document.getElementById('myGraphs').style.display = 'none';
         }
       });
-  }
 
-    function mySignOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-        document.getElementById('id01').style.display='none';
-      });
-    }
 
-    function signUp() {
+function signIn() {
 
-     var username = document.getElementById("email").value;
-     var password = document.getElementById("psw").value;
-     firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // [START_EXCLUDE]
-        if (errorCode == 'auth/weak-password') {
-          alert('The password is too weak.');
-        } else {
-          alert(errorMessage);
-        }
-        console.log(error);
-        // [END_EXCLUDE]
-      });
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
 
-           //Handle Account Status
-      firebase.auth().onAuthStateChanged(user => {
-        if(user) {
-          window.location = 'graph.html'; //After successful login, user will be redirected to home.html
-        }
-      });
-    
-  }
-
-  function login() {
-
-      document.getElementById('id01').style.display='none';
       if (firebase.auth().currentUser) {
         // [START signout]
-        console.log(firebase.auth().currentUser.email);
         firebase.auth().signOut();
-        // [END signout]
-      } 
-      {
-        var email = document.getElementById('email').value;
-        var password = document.getElementById('psw').value;
-        if (email.length < 4) {
-          alert('Please enter an email address.');
-          return;
-        }
-        if (password.length < 4) {
-          alert('Please enter a password.');
-          return;
-        }
-        // Sign in with email and pass.
-        // [START authwithemail]
-        var result = firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        console.log('Sign Out Succ');
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -209,22 +190,199 @@
           }
           console.log(error);
           
-
           // [END_EXCLUDE]
         });
+        // [END signout]
+      } else {
         
-        
+        if (email.length < 4) {
+          alert('Please enter an email address.');
+          return;
+        }
+        if (password.length < 4) {
+          alert('Please enter a password.');
+          return;
+        }
+        console.log('Novy');
+        // Sign in with email and pass.
+        // [START authwithemail]
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          
+          // [END_EXCLUDE]
+        });
         // [END authwithemail]
       }
-      
-      //Handle Account Status
-      firebase.auth().onAuthStateChanged(user => {
-        if(user) {
-          window.location = 'index.html'; //After successful login, user will be redirected to home.html
-        }
-      });
-      
+      document.getElementById('myModal').style.display='none';
+     
     }
+
+    function signOut(){
+      firebase.auth().signOut().then(function() {
+          // Sign-out successful.
+          console.log('Sign Out');
+          document.getElementById('myModal').style.display='none';
+        }).catch(function(error) {
+          // An error happened.
+        });
+    }
+
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == myModal) {
+          myModal.style.display = "none";
+      }
+  }
+
+  var graphs = document.getElementById('myGraphs');
+  graphs.onclick = function(event){
+      window.location.href = 'graph.html'; //After successful login, user will be redirected to home.html    
+  }
+
+  var main = document.getElementById('mainPage');
+  main.onclick = function(event){
+      window.location.href = 'index.html';
+  }
+
+    // function mySignOut() {
+    //   firebase.auth().signOut().then(function() {
+    //       console.log('Sign Out Succ');
+    //     //   firebase.auth().onAuthStateChanged(user => {
+    //     //   if(!user) {
+    //     //     login(email,password);
+    //     //   }
+    //     // });
+          
+    //     }, function(error) {
+    //       console.error('Sign Out Error', error);
+    //     });
+    //   // var auth2 = gapi.auth2.getAuthInstance();
+    //   // auth2.signOut().then(function () {
+    //   //   console.log('User signed out.');
+    //   //   document.getElementById('id01').style.display = 'none';
+    //   //   document.getElementById('myGraphs').style.display = 'none';        
+    //   // });
+    // }
+
+  //   function signUp() {
+
+  //    var username = document.getElementById("email").value;
+  //    var password = document.getElementById("psw").value;
+  //    firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
+  //       // Handle Errors here.
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       // [START_EXCLUDE]
+  //       if (errorCode == 'auth/weak-password') {
+  //         alert('The password is too weak.');
+  //       } else {
+  //         alert(errorMessage);
+  //       }
+  //       console.log(error);
+  //       // [END_EXCLUDE]
+  //     });
+
+  //          //Handle Account Status
+  //     firebase.auth().onAuthStateChanged(user => {
+  //       if(user) {
+  //         window.location = 'graph.html'; //After successful login, user will be redirected to home.html
+  //       }
+  //     });
+    
+  // }
+  // function login(email, password){
+  //     if (email.length < 4) {
+  //         alert('Please enter an email address.');
+  //         return;
+  //       }
+  //       if (password.length < 4) {
+  //         alert('Please enter a password.');
+  //         return;
+  //       }
+  //       console.log("prihlaseni");
+  //       // Sign in with email and pass.
+  //       // [START authwithemail]
+  //       var result = firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+  //         // Handle Errors here.
+  //         var errorCode = error.code;
+  //         var errorMessage = error.message;
+  //         // [START_EXCLUDE]
+  //         if (errorCode === 'auth/wrong-password') {
+  //           alert('Wrong password.');
+  //         } else {
+  //           alert(errorMessage);
+  //         }
+  //         console.log(error);
+          
+
+  //         // [END_EXCLUDE]
+  //       });
+  // }
+
+  // function evaluateLoginData() {
+
+  //     document.getElementById('id01').style.display='none';
+  //     var email = document.getElementById('email').value;
+  //     var password = document.getElementById('psw').value;
+  //     if (firebase.auth().currentUser) {
+  //       // [START signout]
+  //       console.log(firebase.auth().currentUser.email);
+  //       // firebase.auth().signOut().then(function() {
+  //       //   console.log('Stary');
+  //       // //   firebase.auth().onAuthStateChanged(user => {
+  //       // //   if(!user) {
+  //       // //     login(email,password);
+  //       // //   }
+  //       // // });
+          
+  //       // }, function(error) {
+  //       //   console.error('Sign Out Error', error);
+  //       // });
+      
+  //       // [END signout]
+  //     }
+  //     else 
+  //     {
+  //       console.log("Nove prihlaseni");              
+  //       login(email,password);
+        
+        
+  //       // [END authwithemail]
+  //     }
+
+      // firebase.auth().onAuthStateChanged(user => {
+      //   if(user) {
+      //     document.getElementById('myGraphs').style.display = 'block';          
+      //     // console.log(leftLinks);
+      //     // var myGraphsLink = document.createElement('a');
+      //     // myGraphsLink.id = "myGraphs";
+      //     // myGraphsLink.text = "My projects"; 
+      //     // myGraphsLink.href = "#";
+      //     // console.log(myGraphsLink);
+      //     // leftLinks.appendChild(myGraphsLink);
+      //     // <a href="#" id='myGraphs'>My projects</a>  
+      //   }
+      // });
+      
+    //   //Handle Account Status
+    //   firebase.auth().onAuthStateChanged(user => {
+    //     if(user) {
+    //       console.log(user.email); 
+    //       // window.location = 'index.html'; //After successful login, user will be redirected to home.html
+    //     }
+    //   });
+      
+    // }
 
     // function onSignIn(googleUser) {
     //   console.log('Google Auth Response', googleUser);
@@ -270,40 +428,41 @@
      * Check that the given Google user is equals to the given Firebase user.
      */
     // [START checksameuser]
-    function isUserEqual(googleUser, firebaseUser) {
-      if (firebaseUser) {
-        var providerData = firebaseUser.providerData;
-        for (var i = 0; i < providerData.length; i++) {
-          if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
-              providerData[i].uid === googleUser.getBasicProfile().getId()) {
-            // We don't need to reauth the Firebase connection.
-            return true;
-          }
-        }
-      }
-      return false;
-    }
+    // function isUserEqual(googleUser, firebaseUser) {
+    //   if (firebaseUser) {
+    //     var providerData = firebaseUser.providerData;
+    //     for (var i = 0; i < providerData.length; i++) {
+    //       if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+    //           providerData[i].uid === googleUser.getBasicProfile().getId()) {
+    //         // We don't need to reauth the Firebase connection.
+    //         return true;
+    //       }
+    //     }
+    //   }
+    //   return false;
+    // }
 
 
-  function addUsers()
-  {
+  // function addUsers()
+  // {
       
-      var userName = document.getElementById("name").value;
-      var userAge = document.getElementById("age").value;      
+  //     var userName = document.getElementById("name").value;
+  //     var userAge = document.getElementById("age").value;      
 
-      var newID = firebase.database().ref().child('Users').push().key;
-      var updates = {};
-      var postData = {
-                name : userName,
-                age : userAge
-              };
-      updates['/Users/' + newID] = postData;
+  //     var newID = firebase.database().ref().child('Users').push().key;
+  //     var updates = {};
+  //     var postData = {
+  //               name : userName,
+  //               age : userAge
+  //             };
+  //     updates['/Users/' + newID] = postData;
 
-      firebase.database().ref().update(updates);
+  //     firebase.database().ref().update(updates);
 
-  }
+  // }
 
 
 </script>
 </body>
 </html>
+

@@ -13,6 +13,15 @@
 	background-color: #dd4b39;
 }
 
+.myGraphs {
+    display: none;
+}
+
+#mainDiv {
+    width: 70%;
+    margin: 0 auto;
+}
+
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
