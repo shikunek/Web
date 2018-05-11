@@ -2,80 +2,9 @@
 	background-color: #45a049;
 }
 
-div{}
-
 .content{
-    color: black;
-    height: auto;
-    text-align: center;
-vertical-align: middle;
-background-color: #90EE90;
- padding: 10px;
-     color: #fff;
-     font-size: xx-large;
+    background-color: #dd4b39;
 }
-
-/*
-.content {
-    background-color: #ddd;
-    padding: 10px;
-}
-*/
-/*.content{
-    font-size: xx-large;
-    background-color: #f4511e;
-    color: #fff;
-    padding: 100px 25px;
-}*/
-
-.middleText{
-    background-color: #90EE90;
-    color: #fff;
-    font-size: large;
-    height: inherit;
-}
-
-.middleText ul li{
-        vertical-align: middle;
-background-color: #90EE90;
-}
-
-ul {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-}
-
-.middleText a img{
-    width: 200px;
-    height: 80px;
-    display: block;
-    margin: auto;
-    padding: 10px;
-}
-
-
-.middleText img{    
-
-}
-
-#images{
-    /*border: 1px solid red;*/
-    margin: 0 auto;
-    text-align: center;
-    width:auto;
-    margin:0 auto;
-}
-
-#images img{
-    width: 300px;
-/*    border: 1px solid green;*/
-    height: 300px;
-    margin: 0 auto;
-    display: inline-block;
-}
-
-
 
 #g-signin2 {
 	width: 200px;
@@ -96,8 +25,6 @@ ul {
     width: 70%;
     margin: 0 auto;
 }
-
-
 
 
 .modal {
@@ -178,7 +105,6 @@ ul {
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #90EE90;
 }
 
 /* Style the top navigation bar */
@@ -212,6 +138,13 @@ body {
 .topnav a:hover {
     background-color: #ddd;
     color: black;
+}
+
+/* Style the content */
+.content {
+    background-color: #aaa;
+    padding: 10px;
+     /* Should be removed. Only for demonstration */
 }
 
 
